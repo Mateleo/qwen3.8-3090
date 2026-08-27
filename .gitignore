@@ -1,0 +1,21 @@
+# Secrets and local runtime state
+.env
+*.key
+api-key
+.local/
+state/
+
+# Downloaded models and build artifacts
+*.gguf
+models/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
