@@ -116,15 +116,60 @@ prefer Tailscale or a named authenticated tunnel for stable access.
 - batch / microbatch sizes of 2048 / 512;
 - native F16/BF16 vision projector;
 - MTP speculative decoding and prompt-prefix caching;
+- backend (GPU) sampling, so host-side sampling of the 248,320-row vocabulary
+  does not gate decode on this CPU;
 - Qwen thinking defaults: temperature 1.0, top-k 20, top-p 0.95, xhigh effort;
 - reasoning returned separately as `message.reasoning_content`.
 
 The dashboard reports generated reasoning as part of **tokens out** because
 `llama.cpp` does not expose a separate reasoning-token Prometheus counter.
 
+### Runtime profiles
+
+`QWEN_SERVER_BUILD` selects the serving runtime. Both serve the same weights and
+the same command line.
+
+| Value | Binary | Notes |
+|---|---|---|
+| `stock` (default) | `~/llama.cpp/build/bin/llama-server` | upstream checkout |
+| `ampere` | `~/llamAmpere-src/repo/build-sm86/bin/llama-server` | SM86 kernels, GPU verification of MTP drafts, draft vocabulary shortlist |
+
+Measured on this machine at the production sampling settings (temperature 1,
+top-k 20, top-p 0.95, reasoning xhigh, 256 output tokens, three seeds, five
+workloads, quiet GPU, `benchmarks/thesis2-confirm2`):
+
+| Configuration | mean decode | peak VRAM |
+|---|---|---|
+| shipped (`stock`, MTP sidecar, MTP3) | 36.7 tok/s | 23,533 MiB |
+| `stock` + `--backend-sampling` + embedded MTP | 36.4 tok/s | 22,690 MiB |
+| `ampere` + `--backend-sampling` + shortlist + GPU draft verification | **45.5 tok/s (+23%)** | 22,438 MiB |
+| `ampere` + `--spec-chain 3` (measured, not promoted: 23.2 GiB, see thesis) | 51-58 tok/s | 23,200 MiB |
+
+`stock` stays the default. The `ampere` build merges a later upstream that
+deliberately changes model output on this architecture: the Gated DeltaNet q/k
+normalization now matches the reference definition (upstream PR 28068). Greedy
+text therefore differs from the stock build on free-form prompts, and is
+identical within the fork across every speculation setting. Switch to it for the
+speed, stay on `stock` if byte-identical continuity of past outputs matters.
+
+With `QWEN_SERVER_BUILD=ampere` the launcher also drops the MTP sidecar: that
+GGUF already carries its own MTP layer, which measures the same speed and leaves
+about 1.1 GiB more VRAM for the Windows desktop.
+
+```bash
+QWEN_SERVER_BUILD=ampere ./start.sh --detach   # faster profile
+QWEN_SERVER_BUILD=stock  ./start.sh            # revert to the shipped runtime
+QWEN_MTP_SIDECAR=1 QWEN_SERVER_BUILD=ampere ./start.sh   # keep the sidecar
+```
+
+`~/.local/state/qwen3.8/server-profile` records what a running server actually
+uses (runtime, draft source, vocabulary map, draft depth).
+
 Environment overrides include `LLAMA_SERVER`, `LLAMA_CPP_DIR`, `QWEN_HOST`,
 `QWEN_PORT`, `QWEN_MODEL_DIR`, `QWEN_AGGRESSIVE_MODEL_DIR`,
-`QWEN_API_KEY_FILE`, `QWEN_STATE_DIR`, and `QWEN_BUILD_JOBS`.
+`QWEN_API_KEY_FILE`, `QWEN_STATE_DIR`, `QWEN_BUILD_JOBS`, `QWEN_SERVER_BUILD`,
+`QWEN_STOCK_SERVER`, `QWEN_AMPERE_SERVER`, `QWEN_VOCAB_MAP`, and
+`QWEN_MTP_SIDECAR`.
 
 ## License
 

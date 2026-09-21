@@ -30,7 +30,33 @@ done
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="${QWEN_ROOT:-$SCRIPT_DIR}"
-LLAMA_SERVER="${LLAMA_SERVER:-$HOME/llama.cpp/build/bin/llama-server}"
+
+# Two runtimes serve the same weights. The stock build stays the default. The
+# local llamAmpere build (QWEN_SERVER_BUILD=ampere) measured +22.7% decode on the
+# production sampling path and uses ~1.1 GiB less VRAM, because it verifies MTP
+# drafts on the GPU and scores only a 65,536-row shortlist of the draft head.
+# Evidence and exact numbers: thesis.md, benchmarks/thesis2-*.
+STOCK_SERVER="${QWEN_STOCK_SERVER:-$HOME/llama.cpp/build/bin/llama-server}"
+AMPERE_SERVER="${QWEN_AMPERE_SERVER:-$HOME/llamAmpere-src/repo/build-sm86/bin/llama-server}"
+SERVER_BUILD="${QWEN_SERVER_BUILD:-stock}"
+case "$SERVER_BUILD" in
+  stock)  DEFAULT_SERVER="$STOCK_SERVER" ;;
+  ampere) DEFAULT_SERVER="$AMPERE_SERVER" ;;
+  *) echo "QWEN_SERVER_BUILD must be 'stock' or 'ampere' (got '$SERVER_BUILD')." >&2; exit 2 ;;
+esac
+LLAMA_SERVER="${LLAMA_SERVER:-$DEFAULT_SERVER}"
+if [[ "$LLAMA_SERVER" == "$AMPERE_SERVER" && ! -x "$LLAMA_SERVER" ]]; then
+  cat >&2 <<EOF
+QWEN_SERVER_BUILD=ampere but $LLAMA_SERVER is not built.
+Build it with (about 25 minutes, keep the parallelism low on this host):
+  cd ~/llamAmpere-src/repo
+  cmake -S . -B build-sm86 -DCMAKE_BUILD_TYPE=Release -DGGML_CUDA=ON -DGGML_CUDA_FA=ON \\
+        -DCMAKE_CUDA_ARCHITECTURES=86 -DGGML_NATIVE=ON
+  cmake --build build-sm86 -j2 --target llama-server
+Or run with QWEN_SERVER_BUILD=stock.
+EOF
+  exit 1
+fi
 KEY_FILE="${QWEN_API_KEY_FILE:-$HOME/.config/qwen3.8/api-key}"
 STATE_DIR="${QWEN_STATE_DIR:-$HOME/.local/state/qwen3.8}"
 PID_FILE="$STATE_DIR/server.pid"
@@ -122,6 +148,24 @@ case "$MODEL_CHOICE" in
   *) echo "Unknown model '$MODEL_CHOICE' (use current or aggressive)." >&2; exit 2 ;;
 esac
 
+# The llamAmpere runtime adds three things the stock build does not have: GPU
+# verification of MTP drafts, the draft vocabulary shortlist and "--fit off".
+# Detect them instead of assuming, so the same script drives both runtimes.
+SERVER_FORK=0
+if "$LLAMA_SERVER" --help 2>/dev/null | grep -q -- "--spec-draft-vocab-map"; then
+  SERVER_FORK=1
+fi
+
+# Draft vocabulary shortlist: the drafter scores 65,536 of the 248,320 output
+# rows. The loader rejects a map whose vocabulary size differs from the model,
+# and a greedy run with the map must reproduce the full-head greedy output.
+VOCAB_MAP="${QWEN_VOCAB_MAP:-$MODEL_DIR/MTP/mtp-vocab-65536.txt}"
+[[ -r "$VOCAB_MAP" ]] || VOCAB_MAP="$HOME/llamAmpere-src/repo/docs/mtp-vocab/atx_65536.txt"
+
+# MTP drafting depth. The fork's measured best at production sampling is 2; the
+# stock build's default (3) is left alone.
+SPEC_DRAFT_N_MAX=2
+
 # First-run onboarding installs the downloader only when required, shows the
 # Hugging Face download progress, builds llama.cpp with CUDA, and creates a key.
 if [[ ! -x "$LLAMA_SERVER" || ! -r "$MODEL" || ! -r "$MMPROJ" || ! -s "$KEY_FILE" ]] \
@@ -197,23 +241,59 @@ args=(
   --reasoning-effort xhigh
   --reasoning-format deepseek
   --reasoning-preserve
+  # Sampling and draft verification run on the GPU. On this 2400G host the host
+  # side of a 248,320-row vocabulary was the decode bottleneck: moving it to the
+  # card is worth +37% at greedy sampling and never measurably loses.
+  --backend-sampling
   --host "$HOST"
   --port "$PORT"
   --api-key-file "$ACTIVE_KEY_FILE"
   --metrics
   --no-webui
 )
-if [[ -n "$MTP" ]]; then
+if (( SERVER_FORK )); then
   args+=(
-    --model-draft "$MTP"
-    --n-gpu-layers-draft all
-    --cache-type-k-draft q4_0
-    --cache-type-v-draft q4_0
+    --fit off
+    --spec-draft-n-max "$SPEC_DRAFT_N_MAX"
   )
+  [[ -r "$VOCAB_MAP" ]] && args+=(--spec-draft-vocab-map "$VOCAB_MAP")
 fi
+DRAFT_DESC="embedded MTP head"
+if [[ -n "$MTP" ]]; then
+  if (( SERVER_FORK )) && [[ "${QWEN_MTP_SIDECAR:-0}" != "1" ]]; then
+    # This GGUF carries its own MTP layer, and on the fork the embedded head is
+    # as fast as the sidecar while using ~1.1 GiB less VRAM.
+    MTP=""
+  else
+    args+=(
+      --model-draft "$MTP"
+      --n-gpu-layers-draft all
+      --cache-type-k-draft q4_0
+      --cache-type-v-draft q4_0
+    )
+    DRAFT_DESC="$MTP"
+  fi
+fi
+{
+  printf 'server=%s\n' "$LLAMA_SERVER"
+  printf 'fork_features=%s\n' "$SERVER_FORK"
+  printf 'backend_sampling=1\n'
+  printf 'draft=%s\n' "$DRAFT_DESC"
+  printf 'vocab_map=%s\n' "$([[ -r "$VOCAB_MAP" ]] && printf '%s' "$VOCAB_MAP" || printf 'none')"
+  if (( SERVER_FORK )); then
+    printf 'spec_draft_n_max=%s\n' "$SPEC_DRAFT_N_MAX"
+  else
+    printf 'spec_draft_n_max=default\n'
+  fi
+} >"$STATE_DIR/server-profile" 2>/dev/null || true
 
 : >"$LOG_FILE"
-nohup "$LLAMA_SERVER" "${args[@]}" >>"$LOG_FILE" 2>&1 &
+if (( SERVER_FORK )); then
+  # Verify the drafter's tokens on the GPU as well (LLAMA_MTP_GPU_VERIFY=1).
+  nohup env LLAMA_MTP_GPU_VERIFY=1 "$LLAMA_SERVER" "${args[@]}" >>"$LOG_FILE" 2>&1 &
+else
+  nohup "$LLAMA_SERVER" "${args[@]}" >>"$LOG_FILE" 2>&1 &
+fi
 pid=$!
 printf '%s\n' "$pid" >"$PID_FILE"
 
