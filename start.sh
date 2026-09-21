@@ -4,22 +4,37 @@ set -euo pipefail
 MONITOR=1
 SHARE=0
 MODEL_CHOICE=""
+PROFILE_CHOICE=""
+LIST_PROFILES=0
 while (($#)); do
   case "$1" in
     --detach|--no-monitor) MONITOR=0 ;;
     --share) SHARE=1 ;;
+    --profile)
+      shift
+      [[ $# -gt 0 ]] || { echo "--profile requires a name; see --list-profiles" >&2; exit 2; }
+      PROFILE_CHOICE="$1"
+      ;;
     --model)
       shift
       [[ $# -gt 0 ]] || { echo "--model requires current or aggressive" >&2; exit 2; }
       MODEL_CHOICE="$1"
       ;;
+    --list-profiles) LIST_PROFILES=1 ;;
     --help|-h)
       cat <<'EOF'
-Usage: start.sh [--detach] [--model current|aggressive] [--share]
+Usage: start.sh [--detach] [--profile NAME] [--model current|aggressive] [--share]
 
-Starts Qwen and opens the live dashboard. With no --model, an interactive
-model picker is shown. --share creates a public Cloudflare Quick Tunnel with
-a fresh temporary API password (cloudflared must be installed).
+Starts Qwen and opens the live dashboard. With no --profile, an interactive menu
+offers every measured runtime/model combination. --share creates a public
+Cloudflare Quick Tunnel with a fresh temporary API password (cloudflared must be
+installed).
+
+Profiles (also listed by --list-profiles):
+  fast               UD-Q4_K_XL on the Ampere runtime   (+23% decode, 22.4 GiB)
+  compat             UD-Q4_K_XL on the stock runtime    (unchanged outputs)
+  aggressive         Aggressive Q4_K_P on the Ampere runtime
+  aggressive-compat  Aggressive Q4_K_P on the stock runtime
 EOF
       exit 0
       ;;
@@ -31,32 +46,24 @@ done
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="${QWEN_ROOT:-$SCRIPT_DIR}"
 
-# Two runtimes serve the same weights. The stock build stays the default. The
-# local llamAmpere build (QWEN_SERVER_BUILD=ampere) measured +22.7% decode on the
-# production sampling path and uses ~1.1 GiB less VRAM, because it verifies MTP
-# drafts on the GPU and scores only a 65,536-row shortlist of the draft head.
-# Evidence and exact numbers: thesis.md, benchmarks/thesis2-*.
+# Two runtimes serve the same weights. Each profile below pairs a model with a
+# runtime. Evidence and exact numbers: thesis.md, benchmarks/thesis2-*.
 STOCK_SERVER="${QWEN_STOCK_SERVER:-$HOME/llama.cpp/build/bin/llama-server}"
 AMPERE_SERVER="${QWEN_AMPERE_SERVER:-$HOME/llamAmpere-src/repo/build-sm86/bin/llama-server}"
-SERVER_BUILD="${QWEN_SERVER_BUILD:-stock}"
-case "$SERVER_BUILD" in
-  stock)  DEFAULT_SERVER="$STOCK_SERVER" ;;
-  ampere) DEFAULT_SERVER="$AMPERE_SERVER" ;;
-  *) echo "QWEN_SERVER_BUILD must be 'stock' or 'ampere' (got '$SERVER_BUILD')." >&2; exit 2 ;;
-esac
-LLAMA_SERVER="${LLAMA_SERVER:-$DEFAULT_SERVER}"
-if [[ "$LLAMA_SERVER" == "$AMPERE_SERVER" && ! -x "$LLAMA_SERVER" ]]; then
+AMPERE_AVAILABLE=0
+[[ -x "$AMPERE_SERVER" ]] && AMPERE_AVAILABLE=1
+
+ampere_build_hint() {
   cat >&2 <<EOF
-QWEN_SERVER_BUILD=ampere but $LLAMA_SERVER is not built.
-Build it with (about 25 minutes, keep the parallelism low on this host):
+The Ampere runtime is not built yet: $AMPERE_SERVER
+Build it (about 25 minutes on this host, keep the parallelism low):
   cd ~/llamAmpere-src/repo
   cmake -S . -B build-sm86 -DCMAKE_BUILD_TYPE=Release -DGGML_CUDA=ON -DGGML_CUDA_FA=ON \\
         -DCMAKE_CUDA_ARCHITECTURES=86 -DGGML_NATIVE=ON
   cmake --build build-sm86 -j2 --target llama-server
-Or run with QWEN_SERVER_BUILD=stock.
+Until then use one of the "stock" profiles (compat / aggressive-compat).
 EOF
-  exit 1
-fi
+}
 KEY_FILE="${QWEN_API_KEY_FILE:-$HOME/.config/qwen3.8/api-key}"
 STATE_DIR="${QWEN_STATE_DIR:-$HOME/.local/state/qwen3.8}"
 PID_FILE="$STATE_DIR/server.pid"
@@ -97,8 +104,16 @@ if pid_file_is_running "$STATE_DIR/tunnel.pid" \
     && [[ -s "$STATE_DIR/tunnel-url" && -s "$STATE_DIR/share-api-key" ]]; then
   PRESERVE_TUNNEL=1
   SHARE=1
-  if [[ -z "$MODEL_CHOICE" && -s "$STATE_DIR/model-choice" ]]; then
-    MODEL_CHOICE="$(<"$STATE_DIR/model-choice")"
+  if [[ -z "$PROFILE_CHOICE" ]]; then
+    if [[ -s "$STATE_DIR/profile-choice" ]]; then
+      PROFILE_CHOICE="$(<"$STATE_DIR/profile-choice")"
+    elif [[ -s "$STATE_DIR/model-choice" ]]; then
+      # State written by an older version: keep serving the same model.
+      case "$(<"$STATE_DIR/model-choice")" in
+        aggressive) PROFILE_CHOICE=aggressive-compat ;;
+        *)          PROFILE_CHOICE=compat ;;
+      esac
+    fi
   fi
   echo "Restoring the existing shared endpoint $(<"$STATE_DIR/tunnel-url")/v1."
 else
@@ -107,24 +122,147 @@ else
     "$STATE_DIR/share-api-key"
 fi
 
-choose_model() {
-  if [[ -n "$MODEL_CHOICE" ]]; then
+# ---------------------------------------------------------------------------
+# Profiles: a name pairs a model with a runtime. The interactive menu is the
+# normal way to pick one; --profile selects it directly for scripts.
+# ---------------------------------------------------------------------------
+PROFILE_ORDER=(fast compat aggressive aggressive-compat)
+
+profile_model() {
+  case "$1" in
+    fast|compat)                  echo current ;;
+    aggressive|aggressive-compat) echo aggressive ;;
+    *) return 1 ;;
+  esac
+}
+
+profile_runtime() {
+  case "$1" in
+    fast|aggressive)          echo ampere ;;
+    compat|aggressive-compat) echo stock ;;
+    *) return 1 ;;
+  esac
+}
+
+profile_title() {
+  case "$1" in
+    fast)              echo "Qwen3.8 27B - rapide (+23%, 22.4 GiB)" ;;
+    compat)            echo "Qwen3.8 27B - sortie identique au stock" ;;
+    aggressive)        echo "Aggressive uncensored - rapide (+23%)" ;;
+    aggressive-compat) echo "Aggressive uncensored - sortie identique" ;;
+  esac
+}
+
+profile_detail() {
+  case "$1" in
+    fast)              echo "UD-Q4_K_XL, runtime Ampere, verification GPU des drafts" ;;
+    compat)            echo "UD-Q4_K_XL, runtime stock, sorties inchangees" ;;
+    aggressive)        echo "Aggressive Q4_K_P, runtime Ampere" ;;
+    aggressive-compat) echo "Aggressive Q4_K_P, runtime stock" ;;
+  esac
+}
+
+list_profiles() {
+  local p
+  for p in "${PROFILE_ORDER[@]}"; do
+    printf '  %-18s %-42s %s\n' "$p" "$(profile_title "$p")" "$(profile_detail "$p")"
+  done
+}
+
+profile_available() {
+  [[ "$(profile_runtime "$1")" == ampere && $AMPERE_AVAILABLE -eq 0 ]] && return 1
+  return 0
+}
+
+choose_profile() {
+  if [[ -n "$PROFILE_CHOICE" ]]; then
     return
   fi
-  if [[ -t 0 && -t 1 ]] && command -v whiptail >/dev/null; then
-    MODEL_CHOICE=$(whiptail --title "Qwen model" --menu "Choose the model to serve" 15 78 4 \
-      current "Qwen3.8 27B · Unsloth UD-Q4_K_XL" \
-      aggressive "Qwen3.8 27B · HauhauCS Aggressive Q4_K_P" \
-      3>&1 1>&2 2>&3) || exit 0
-  elif [[ -t 0 && -t 1 ]]; then
-    printf 'Choose model:\n  1) Qwen3.8 27B (Unsloth UD-Q4_K_XL)\n  2) HauhauCS Aggressive (Q4_K_P)\n> '
-    read -r answer
-    case "$answer" in 2) MODEL_CHOICE=aggressive ;; *) MODEL_CHOICE=current ;; esac
-  else
-    MODEL_CHOICE=current
+  # --model stays supported: it means "this model on the stock runtime".
+  if [[ -n "$MODEL_CHOICE" ]]; then
+    case "$MODEL_CHOICE" in
+      current)    PROFILE_CHOICE=compat ;;
+      aggressive) PROFILE_CHOICE=aggressive-compat ;;
+      *) echo "Unknown model '$MODEL_CHOICE' (use current or aggressive)." >&2; exit 2 ;;
+    esac
+    return
   fi
+  local default="compat" saved=""
+  if [[ -s "$STATE_DIR/profile-choice" ]]; then
+    saved="$(<"$STATE_DIR/profile-choice")"
+    if profile_model "$saved" >/dev/null 2>&1 && profile_available "$saved"; then
+      default="$saved"
+    fi
+  fi
+  if [[ -t 0 && -t 1 ]] && command -v whiptail >/dev/null; then
+    local items=() tag note
+    for tag in "${PROFILE_ORDER[@]}"; do
+      note=""
+      profile_available "$tag" || note="  [not built]"
+      items+=("$tag" "$(profile_title "$tag")$note")
+    done
+    PROFILE_CHOICE=$(whiptail --title "Qwen 3.8 - what to serve" --default-item "$default" \
+      --menu "Pick a profile. Both runtimes serve the same weights.
+Measured on this machine: fast = +23% tokens/s, uses less VRAM.
+Last used: $default" 20 96 4 "${items[@]}" 3>&1 1>&2 2>&3) || exit 0
+    return
+  fi
+  if [[ -t 0 && -t 1 ]]; then
+    echo "Pick a profile:"
+    local i=1 p
+    for p in "${PROFILE_ORDER[@]}"; do
+      printf '  %d) %-18s %s\n     %s\n' "$i" "$p" "$(profile_title "$p")" "$(profile_detail "$p")"
+      i=$((i+1))
+    done
+    printf 'Choice [%s]: ' "$default"
+    read -r answer
+    case "$answer" in
+      "")            PROFILE_CHOICE="$default" ;;
+      1)             PROFILE_CHOICE=fast ;;
+      2)             PROFILE_CHOICE=compat ;;
+      3)             PROFILE_CHOICE=aggressive ;;
+      4)             PROFILE_CHOICE=aggressive-compat ;;
+      fast|compat|aggressive|aggressive-compat) PROFILE_CHOICE="$answer" ;;
+      *) echo "Invalid choice '$answer'." >&2; exit 2 ;;
+    esac
+    return
+  fi
+  PROFILE_CHOICE="$default"
 }
-choose_model
+
+if (( LIST_PROFILES )); then
+  list_profiles
+  exit 0
+fi
+choose_profile
+profile_model "$PROFILE_CHOICE" >/dev/null 2>&1 || {
+  echo "Unknown profile '$PROFILE_CHOICE'. Available:" >&2
+  list_profiles >&2
+  exit 2
+}
+if ! profile_available "$PROFILE_CHOICE"; then
+  ampere_build_hint
+  exit 1
+fi
+MODEL_CHOICE="$(profile_model "$PROFILE_CHOICE")"
+SERVER_BUILD="$(profile_runtime "$PROFILE_CHOICE")"
+# An explicit QWEN_SERVER_BUILD still overrides the runtime of the chosen model.
+if [[ -n "${QWEN_SERVER_BUILD:-}" ]]; then
+  case "$QWEN_SERVER_BUILD" in
+    stock)  SERVER_BUILD=stock ;;
+    ampere) SERVER_BUILD=ampere ;;
+    *) echo "QWEN_SERVER_BUILD must be 'stock' or 'ampere' (got '$QWEN_SERVER_BUILD')." >&2; exit 2 ;;
+  esac
+fi
+if [[ "$SERVER_BUILD" == ampere && $AMPERE_AVAILABLE -eq 0 ]]; then
+  ampere_build_hint
+  exit 1
+fi
+case "$SERVER_BUILD" in
+  stock)  DEFAULT_SERVER="$STOCK_SERVER" ;;
+  ampere) DEFAULT_SERVER="$AMPERE_SERVER" ;;
+esac
+LLAMA_SERVER="${LLAMA_SERVER:-$DEFAULT_SERVER}"
 
 case "$MODEL_CHOICE" in
   current)
@@ -147,6 +285,8 @@ case "$MODEL_CHOICE" in
     ;;
   *) echo "Unknown model '$MODEL_CHOICE' (use current or aggressive)." >&2; exit 2 ;;
 esac
+# The dashboard shows which profile is serving.
+MODEL_LABEL="$MODEL_LABEL · $PROFILE_CHOICE"
 
 # The llamAmpere runtime adds three things the stock build does not have: GPU
 # verification of MTP drafts, the draft vocabulary shortlist and "--fit off".
@@ -211,6 +351,7 @@ printf '%s\n' "$ACTIVE_KEY_FILE" >"$STATE_DIR/key-file"
 printf '%s\n' "$MODEL_ALIAS" >"$STATE_DIR/model-alias"
 printf '%s\n' "$MODEL_LABEL" >"$STATE_DIR/model-label"
 printf '%s\n' "$MODEL_CHOICE" >"$STATE_DIR/model-choice"
+printf '%s\n' "$PROFILE_CHOICE" >"$STATE_DIR/profile-choice"
 
 args=(
   --model "$MODEL"
@@ -308,6 +449,7 @@ for _ in $(seq 1 180); do
       "http://$HOST:$PORT/health" >/dev/null 2>&1; then
     echo "$MODEL_LABEL is ready at http://$HOST:$PORT/v1 (PID $pid)."
     echo "Model ID: $MODEL_ALIAS"
+    echo "Profile: $PROFILE_CHOICE ($SERVER_BUILD runtime)"
     echo "Log: $LOG_FILE"
 
     if (( SHARE )); then

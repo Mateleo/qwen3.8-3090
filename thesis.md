@@ -17,13 +17,21 @@ configuration; section 6 lists what is still open.
 
 ## 1. Promoted configuration (measured, verified)
 
-`start.sh` selects a runtime with `QWEN_SERVER_BUILD` and always adds
-`--backend-sampling`:
+`start.sh` turns this into named profiles in an interactive menu, and each
+profile pins its own runtime (the launcher probes the binary for the fork
+features instead of assuming them, so one script drives both runtimes):
 
 ```bash
-QWEN_SERVER_BUILD=ampere ./start.sh --detach   # +23%, 22,438 MiB peak
-QWEN_SERVER_BUILD=stock  ./start.sh            # shipped runtime, unchanged
+./start.sh                      # menu: fast / compat / aggressive / aggressive-compat
+./start.sh --profile fast       # +23%, 22,438 MiB peak, 22.4 GiB
+./start.sh --profile compat     # the previously shipped configuration
+./start.sh --list-profiles      # print the profiles with their measured numbers
 ```
+
+`--profile fast` is the configuration measured in this section. The same
+settings remain reachable through the environment (`QWEN_SERVER_BUILD=stock` to
+override the runtime, `QWEN_MTP_SIDECAR=1` to keep the Q4 sidecar), and the
+choice is remembered in `~/.local/state/qwen3.8/profile-choice`.
 
 The `ampere` build is `~/llamAmpere-src/repo/build-sm86/bin/llama-server`
 (llamAmpere v0.3.1, built here from `2cb1693`, CUDA 12.0, sm_86). The launcher

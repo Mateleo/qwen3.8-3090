@@ -45,31 +45,37 @@ Existing model files, builds, and keys are preserved. For unattended setup, add
 ## Commands
 
 ```bash
-./start.sh                              # choose model, start, open dashboard
-./start.sh --model current              # Unsloth UD-Q4_K_XL
-./start.sh --model aggressive           # HauhauCS Aggressive Q4_K_P
+./start.sh                              # interactive profile menu, then dashboard
+./start.sh --profile fast               # UD-Q4_K_XL on the Ampere runtime (+23%)
+./start.sh --profile compat             # UD-Q4_K_XL on the stock runtime
+./start.sh --profile aggressive         # HauhauCS Aggressive on the Ampere runtime
+./start.sh --list-profiles              # print the profiles and their numbers
 ./start.sh --detach                     # start without dashboard
+./start.sh --model current              # kept for compatibility (stock runtime)
 ./monitor.py                            # attach dashboard later
 ./status.sh
 ./test-api.sh
 ./stop.sh
 ```
 
-The picker uses `whiptail` when available and has a plain terminal fallback.
+The profile menu uses `whiptail` when available and has a plain terminal
+fallback. It preselects the profile used last, so pressing Enter repeats it.
 Running `start.sh` while the server is alive only reattaches the dashboard.
 Pressing `q` or `Ctrl-C` closes the dashboard without stopping the server. Logs
 are written to `~/.local/state/qwen3.8/server.log`.
 
 ## Models
 
-| Picker ID | API model ID | Quantization | MTP |
+| Profile | API model ID | Model | Runtime |
 |---|---|---|---|
-| `current` | `qwen3.8-27b` | Unsloth UD-Q4_K_XL | Q4 sidecar |
-| `aggressive` | `qwen3.8-27b-aggressive` | HauhauCS Q4_K_P | embedded native MTP |
+| `fast` | `qwen3.8-27b` | Unsloth UD-Q4_K_XL | Ampere (+23% decode, 22.4 GiB) |
+| `compat` | `qwen3.8-27b` | Unsloth UD-Q4_K_XL | stock (23.5 GiB) |
+| `aggressive` | `qwen3.8-27b-aggressive` | HauhauCS Q4_K_P | Ampere |
+| `aggressive-compat` | `qwen3.8-27b-aggressive` | HauhauCS Q4_K_P | stock |
 
 The Aggressive repository also offers a FastMTP sidecar that requires a patched
-`llama.cpp`. This project deliberately uses the GGUF's native embedded MTP so
-it remains compatible with upstream `llama.cpp`.
+`llama.cpp`. This project deliberately uses the GGUF's native embedded MTP, and
+the Ampere runtime reuses the same embedded MTP head.
 
 ## API client
 
@@ -126,13 +132,15 @@ The dashboard reports generated reasoning as part of **tokens out** because
 
 ### Runtime profiles
 
-`QWEN_SERVER_BUILD` selects the serving runtime. Both serve the same weights and
-the same command line.
+A profile pairs a model with a runtime. `./start.sh` shows them in a menu;
+`--profile NAME` picks one directly and `--list-profiles` prints them.
 
-| Value | Binary | Notes |
+| Profile | Runtime binary | Notes |
 |---|---|---|
-| `stock` (default) | `~/llama.cpp/build/bin/llama-server` | upstream checkout |
-| `ampere` | `~/llamAmpere-src/repo/build-sm86/bin/llama-server` | SM86 kernels, GPU verification of MTP drafts, draft vocabulary shortlist |
+| `fast` | `~/llamAmpere-src/repo/build-sm86/bin/llama-server` | SM86 kernels, GPU verification of MTP drafts, draft vocabulary shortlist |
+| `compat` | `~/llama.cpp/build/bin/llama-server` | upstream checkout |
+| `aggressive` | Ampere binary | HauhauCS Aggressive weights |
+| `aggressive-compat` | stock binary | HauhauCS Aggressive weights |
 
 Measured on this machine at the production sampling settings (temperature 1,
 top-k 20, top-p 0.95, reasoning xhigh, 256 output tokens, three seeds, five
@@ -140,26 +148,30 @@ workloads, quiet GPU, `benchmarks/thesis2-confirm2`):
 
 | Configuration | mean decode | peak VRAM |
 |---|---|---|
-| shipped (`stock`, MTP sidecar, MTP3) | 36.7 tok/s | 23,533 MiB |
-| `stock` + `--backend-sampling` + embedded MTP | 36.4 tok/s | 22,690 MiB |
-| `ampere` + `--backend-sampling` + shortlist + GPU draft verification | **45.5 tok/s (+23%)** | 22,438 MiB |
-| `ampere` + `--spec-chain 3` (measured, not promoted: 23.2 GiB, see thesis) | 51-58 tok/s | 23,200 MiB |
+| `compat` (stock, MTP sidecar, MTP3) | 36.7 tok/s | 23,533 MiB |
+| stock + `--backend-sampling` + embedded MTP | 36.4 tok/s | 22,690 MiB |
+| `fast` (`--backend-sampling` + shortlist + GPU draft verification) | **45.5 tok/s (+23%)** | 22,438 MiB |
+| `fast` + `--spec-chain 3` (measured, not promoted: 23.2 GiB, see thesis) | 51-58 tok/s | 23,200 MiB |
 
-`stock` stays the default. The `ampere` build merges a later upstream that
-deliberately changes model output on this architecture: the Gated DeltaNet q/k
-normalization now matches the reference definition (upstream PR 28068). Greedy
-text therefore differs from the stock build on free-form prompts, and is
-identical within the fork across every speculation setting. Switch to it for the
-speed, stay on `stock` if byte-identical continuity of past outputs matters.
+The `fast` profile merges a later upstream that deliberately changes model
+output on this architecture: the Gated DeltaNet q/k normalization now matches the
+reference definition (upstream PR 28068). Greedy text therefore differs from
+`compat` on free-form prompts, and is identical within the fork across every
+speculation setting. Pick `fast` for the speed, keep `compat` if byte-identical
+continuity of past outputs matters.
 
-With `QWEN_SERVER_BUILD=ampere` the launcher also drops the MTP sidecar: that
-GGUF already carries its own MTP layer, which measures the same speed and leaves
-about 1.1 GiB more VRAM for the Windows desktop.
+The `fast` profile also drops the MTP sidecar: that GGUF already carries its own
+MTP layer, which measures the same speed and leaves about 1.1 GiB more VRAM for
+the Windows desktop.
+
+Both profiles are also selectable through the environment, which the menu writes
+back to `~/.local/state/qwen3.8/profile-choice`:
 
 ```bash
-QWEN_SERVER_BUILD=ampere ./start.sh --detach   # faster profile
-QWEN_SERVER_BUILD=stock  ./start.sh            # revert to the shipped runtime
-QWEN_MTP_SIDECAR=1 QWEN_SERVER_BUILD=ampere ./start.sh   # keep the sidecar
+./start.sh --profile fast          # fastest, measured
+./start.sh --profile compat        # unchanged outputs
+QWEN_SERVER_BUILD=stock ./start.sh --profile fast   # runtime override
+QWEN_MTP_SIDECAR=1 ./start.sh --profile fast        # keep the Q4 sidecar
 ```
 
 `~/.local/state/qwen3.8/server-profile` records what a running server actually
