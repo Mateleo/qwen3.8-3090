@@ -1,0 +1,25 @@
+[20:48:45] start stock-be-mtp1 (GPU target sampling with MTP1)
+[20:49:28]   ready in 42.5s, {'vram_mib': 22982, 'watts': 101.54, 'sm_mhz': 1695, 'temp_c': 54}
+[20:49:36]   novel-code   decode 38.65 tok/s | prefill 105.30 tok/s | draft 118/136 | 8.0s
+[20:49:43]   prose        decode 40.47 tok/s | prefill 82.00 tok/s | draft 120/135 | 7.2s
+[20:49:51]   patch        decode 40.74 tok/s | prefill 325.15 tok/s | draft 120/134 | 7.4s
+[20:49:56]   copy         decode 41.25 tok/s | prefill 300.99 tok/s | draft 127/128 | 5.3s
+[20:50:16]   prefill8k    decode 19.45 tok/s | prefill 857.37 tok/s | draft 1/5 | 19.5s
+[20:50:24] wrote 5 rows for stock-be-mtp1
+[20:50:24] start stock-be-mtp4 (GPU target sampling with MTP4)
+[20:51:09]   ready in 44.3s, {'vram_mib': 23432, 'watts': 75.22, 'sm_mhz': 555, 'temp_c': 50}
+[20:51:17]   novel-code   decode 40.74 tok/s | prefill 99.81 tok/s | draft 179/299 | 8.0s
+[20:51:22]   prose        decode 44.13 tok/s | prefill 87.34 tok/s | draft 183/284 | 4.8s
+[20:51:29]   patch        decode 46.40 tok/s | prefill 318.79 tok/s | draft 185/276 | 6.8s
+[20:51:34]   copy         decode 57.57 tok/s | prefill 316.86 tok/s | draft 201/214 | 5.4s
+[20:51:52]   prefill8k    decode 14.50 tok/s | prefill 853.26 tok/s | draft 2/17 | 17.9s
+[20:52:03] wrote 5 rows for stock-be-mtp4
+[20:52:03] start stock-be-t8 (GPU target sampling, MTP2, 8 host threads)
+[20:52:48]   ready in 44.2s, {'vram_mib': 23132, 'watts': 136.79, 'sm_mhz': 1965, 'temp_c': 53}
+[20:52:54]   novel-code   decode 41.39 tok/s | prefill 114.68 tok/s | draft 155/198 | 5.7s
+[20:53:00]   prose        decode 44.09 tok/s | prefill 89.59 tok/s | draft 159/191 | 6.6s
+[20:53:07]   patch        decode 44.37 tok/s | prefill 325.54 tok/s | draft 160/189 | 6.9s
+[20:53:14]   copy         decode 48.06 tok/s | prefill 315.13 tok/s | draft 168/173 | 6.3s
+[20:53:32]   prefill8k    decode 15.22 tok/s | prefill 835.94 tok/s | draft 1/10 | 18.2s
+[20:53:43] wrote 5 rows for stock-be-t8
+[20:53:43] done, results in /home/mateleo/qwen3.8-server/benchmarks/thesis2-stock-screen4/rows.jsonl

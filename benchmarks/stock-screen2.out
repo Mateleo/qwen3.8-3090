@@ -1,0 +1,49 @@
+[20:28:29] start stock-be-mtp2 (GPU target sampling with MTP2)
+[20:29:15]   ready in 46.3s, {'vram_mib': 23115, 'watts': 69.21, 'sm_mhz': 885, 'temp_c': 47}
+[20:29:21]   novel-code   decode 41.34 tok/s | prefill 108.33 tok/s | draft 155/198 | 6.0s
+[20:29:28]   prose        decode 43.17 tok/s | prefill 80.21 tok/s | draft 159/191 | 6.9s
+[20:29:35]   patch        decode 44.42 tok/s | prefill 338.77 tok/s | draft 160/189 | 7.0s
+[20:29:42]   copy         decode 48.74 tok/s | prefill 294.59 tok/s | draft 168/173 | 6.3s
+[20:30:00]   prefill8k    decode 16.80 tok/s | prefill 856.01 tok/s | draft 1/10 | 17.8s
+[20:30:11] wrote 5 rows for stock-be-mtp2
+[20:30:11] start stock-be-mtp2-ngram (GPU target sampling, MTP2 and n-gram lookup)
+[20:30:53]   ready in 42.4s, {'vram_mib': 23115, 'watts': 75.82, 'sm_mhz': 495, 'temp_c': 51}
+[20:31:01]   novel-code   decode 40.34 tok/s | prefill 101.34 tok/s | draft 155/198 | 8.0s
+[20:31:08]   prose        decode 43.01 tok/s | prefill 77.93 tok/s | draft 159/191 | 6.9s
+[20:31:16]   patch        decode 43.24 tok/s | prefill 320.04 tok/s | draft 160/189 | 7.1s
+[20:31:19]   copy         decode 98.84 tok/s | prefill 279.77 tok/s | draft 234/239 | 3.7s
+[20:31:38]   prefill8k    decode 15.39 tok/s | prefill 835.61 tok/s | draft 1/10 | 18.3s
+[20:31:49] wrote 5 rows for stock-be-mtp2-ngram
+[20:31:49] start stock-be-ub1024 (GPU target sampling, MTP2, UB1024 prefill)
+[20:32:32]   ready in 42.4s, {'vram_mib': 23531, 'watts': 111.61, 'sm_mhz': 1695, 'temp_c': 52}
+[20:32:40]   novel-code   decode 40.48 tok/s | prefill 67.77 tok/s | draft 155/198 | 8.3s
+[20:32:47]   prose        decode 43.71 tok/s | prefill 60.23 tok/s | draft 159/191 | 7.0s
+[20:32:53]   patch        decode 43.36 tok/s | prefill 244.69 tok/s | draft 160/189 | 5.5s
+[20:32:59]   copy         decode 47.96 tok/s | prefill 234.61 tok/s | draft 168/173 | 6.6s
+[20:33:19]   prefill8k    decode 19.46 tok/s | prefill 840.25 tok/s | draft 2/8 | 19.9s
+[20:33:28] wrote 5 rows for stock-be-ub1024
+[20:33:28] start stock-be-embed (GPU target sampling on the embedded MTP head)
+[20:34:09]   ready in 40.4s, {'vram_mib': 22200, 'watts': 95.15, 'sm_mhz': 630, 'temp_c': 53}
+[20:34:17]   novel-code   decode 39.27 tok/s | prefill 99.65 tok/s | draft 151/206 | 8.2s
+[20:34:24]   prose        decode 42.92 tok/s | prefill 72.71 tok/s | draft 158/193 | 7.0s
+[20:34:29]   patch        decode 45.26 tok/s | prefill 325.13 tok/s | draft 160/189 | 5.0s
+[20:34:35]   copy         decode 49.38 tok/s | prefill 308.51 tok/s | draft 168/173 | 6.2s
+[20:34:55]   prefill8k    decode 15.70 tok/s | prefill 836.89 tok/s | draft 1/11 | 20.1s
+[20:35:04] wrote 5 rows for stock-be-embed
+[20:35:04] start stock-be-only (GPU target sampling without speculation (control))
+[20:35:43]   ready in 38.3s, {'vram_mib': 20848, 'watts': 96.07, 'sm_mhz': 945, 'temp_c': 52}
+[20:35:53]   novel-code   decode 28.30 tok/s | prefill 137.04 tok/s | draft None/None | 10.0s
+[20:36:03]   prose        decode 28.26 tok/s | prefill 86.87 tok/s | draft None/None | 9.8s
+[20:36:10]   patch        decode 28.05 tok/s | prefill 380.29 tok/s | draft None/None | 7.4s
+[20:36:21]   copy         decode 27.35 tok/s | prefill 353.52 tok/s | draft None/None | 10.2s
+[20:36:40]   prefill8k    decode 21.44 tok/s | prefill 885.21 tok/s | draft None/None | 18.9s
+[20:36:47] wrote 5 rows for stock-be-only
+[20:36:47] start stock-be-q8draft (GPU target sampling, MTP2, q8_0 drafter cache)
+[20:37:32]   ready in 44.4s, {'vram_mib': 23260, 'watts': 138.3, 'sm_mhz': 1965, 'temp_c': 54}
+[20:37:40]   novel-code   decode 40.22 tok/s | prefill 103.85 tok/s | draft 153/202 | 8.0s
+[20:37:45]   prose        decode 43.04 tok/s | prefill 87.86 tok/s | draft 158/194 | 4.9s
+[20:37:52]   patch        decode 44.11 tok/s | prefill 308.81 tok/s | draft 159/191 | 7.1s
+[20:37:58]   copy         decode 47.80 tok/s | prefill 304.24 tok/s | draft 168/173 | 6.4s
+[20:38:17]   prefill8k    decode 16.80 tok/s | prefill 836.01 tok/s | draft 1/10 | 18.3s
+[20:38:28] wrote 5 rows for stock-be-q8draft
+[20:38:28] done, results in /home/mateleo/qwen3.8-server/benchmarks/thesis2-stock-screen2/rows.jsonl

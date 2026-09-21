@@ -1,0 +1,46 @@
+{
+ "row": {
+  "tag": "confirm1",
+  "profile": "stock-mtp3",
+  "note": "shipped launcher configuration (MTP3 sidecar)",
+  "fixture": "patch",
+  "seed": 3,
+  "temp": 1.0,
+  "load_s": 36.26,
+  "wall_s": 12.872,
+  "prompt_n": 390,
+  "prompt_per_second": 425.6870479803878,
+  "predicted_n": 512,
+  "predicted_per_second": 37.28952580274644,
+  "draft_n": 570,
+  "draft_n_accepted": 320,
+  "completion_tokens": 512,
+  "gpu": {
+   "vram_mib": 23095,
+   "watts": 235.86,
+   "sm_mhz": 1485,
+   "temp_c": 69
+  }
+ },
+ "usage": {
+  "completion_tokens": 512,
+  "prompt_tokens": 390,
+  "total_tokens": 902,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 390,
+  "prompt_ms": 916.166,
+  "prompt_per_token_ms": 2.3491435897435897,
+  "prompt_per_second": 425.6870479803878,
+  "predicted_n": 512,
+  "predicted_ms": 13703.58,
+  "predicted_per_token_ms": 26.817181996086106,
+  "predicted_per_second": 37.28952580274644,
+  "draft_n": 570,
+  "draft_n_accepted": 320
+ }
+}

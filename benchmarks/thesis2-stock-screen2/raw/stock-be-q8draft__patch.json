@@ -1,0 +1,145 @@
+{
+ "row": {
+  "tag": "stock-screen2",
+  "profile": "stock-be-q8draft",
+  "note": "GPU target sampling, MTP2, q8_0 drafter cache",
+  "fixture": "patch",
+  "temperature": 0.0,
+  "load_s": 44.43,
+  "wall_s": 7.107,
+  "prompt_n": 339,
+  "prompt_per_second": 308.8101063800715,
+  "predicted_n": 256,
+  "predicted_per_second": 44.106887420196806,
+  "draft_n": 191,
+  "draft_n_accepted": 159,
+  "tokens_evaluated": 339,
+  "tokens_predicted": 256,
+  "tokens_cached": 594,
+  "stop_type": "limit",
+  "sha256": "131d12a3dfa0323feca8d7cd29ac055b7aa93311b6953bf4312801d782088ac0",
+  "chars": 1192,
+  "gpu": {
+   "vram_mib": 23308,
+   "watts": 228.65,
+   "sm_mhz": 1290,
+   "temp_c": 64
+  }
+ },
+ "raw": {
+  "index": 0,
+  "content": "<think>\nLet me analyze the requirements:\n\n1. Every station that ever reported a reading below zero must be dropped from the summary.\n2. The summary must also report the number of dropped readings per station.\n\nWait, let me re-read: \"every station that ever reported a reading below zero must be dropped from the summary, and the summary must also report the number of dropped readings per station.\"\n\nSo:\n- If a station has ANY reading below zero, that station is dropped from the summary entirely.\n- The summary must report the number of dropped readings per station.\n\nWait, this is a bit contradictory. If the station is dropped from the summary, how can we report the number of dropped readings per station? Let me re-read.\n\n\"every station that ever reported a reading below zero must be dropped from the summary\" - so the station's mean/peak data is removed.\n\n\"and the summary must also report the number of dropped readings per station\" - so for each station that was dropped, we report how many readings were below zero (i.e., how many readings caused it to be dropped, or how many readings were below zero).\n\nActually, I think \"dropped readings\" means the readings that were below zero.",
+  "tokens": [],
+  "id_slot": 0,
+  "stop": true,
+  "model": "/home/mateleo/models/Qwen3.8-27B/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+  "tokens_predicted": 256,
+  "tokens_evaluated": 339,
+  "generation_settings": {
+   "seed": 4294967295,
+   "temperature": 0.0,
+   "dynatemp_range": 0.0,
+   "dynatemp_exponent": 1.0,
+   "top_k": 0,
+   "top_p": 1.0,
+   "min_p": 0.0,
+   "top_n_sigma": -1.0,
+   "xtc_probability": 0.0,
+   "xtc_threshold": 0.10000000149011612,
+   "typical_p": 1.0,
+   "repeat_last_n": 64,
+   "repeat_penalty": 1.0,
+   "presence_penalty": 0.0,
+   "frequency_penalty": 0.0,
+   "dry_multiplier": 0.0,
+   "dry_base": 1.75,
+   "dry_allowed_length": 2,
+   "dry_penalty_last_n": 64,
+   "dry_sequence_breakers": [
+    "\n",
+    ":",
+    "\"",
+    "*"
+   ],
+   "mirostat": 0,
+   "mirostat_tau": 5.0,
+   "mirostat_eta": 0.10000000149011612,
+   "adaptive_target": -1.0,
+   "adaptive_decay": 0.8999999761581421,
+   "stop": [],
+   "max_tokens": 256,
+   "n_predict": 256,
+   "n_keep": 0,
+   "n_discard": 0,
+   "ignore_eos": true,
+   "stream": false,
+   "logit_bias": [
+    {
+     "bias": null,
+     "token": 248044
+    },
+    {
+     "bias": null,
+     "token": 248046
+    },
+    {
+     "bias": null,
+     "token": 248063
+    },
+    {
+     "bias": null,
+     "token": 248064
+    },
+    {
+     "bias": null,
+     "token": 248065
+    }
+   ],
+   "n_probs": 0,
+   "min_keep": 0,
+   "grammar": "",
+   "grammar_lazy": false,
+   "grammar_triggers": [],
+   "preserved_tokens": [],
+   "chat_format": "Content-only",
+   "reasoning_format": "deepseek",
+   "reasoning_in_content": false,
+   "generation_prompt": "",
+   "samplers": [
+    "penalties",
+    "dry",
+    "top_n_sigma",
+    "top_k",
+    "typ_p",
+    "top_p",
+    "min_p",
+    "xtc",
+    "temperature"
+   ],
+   "speculative.types": "none,draft-mtp",
+   "timings_per_token": false,
+   "post_sampling_probs": false,
+   "backend_sampling": true,
+   "lora": []
+  },
+  "prompt": "Apply exactly one change to this file: every station that ever reported a\nreading below zero must be dropped from the summary, and the summary must also\nreport the number of dropped readings per station. Output the complete revised\nfile, with the same imports and the same public function names.\n\n```python\nimport json\nimport os\nfrom dataclasses import dataclass\nfrom typing import Iterable\n\n\n@dataclass\nclass Station:\n    name: str\n    readings: list[float]\n\n    def mean(self) -> float:\n        return sum(self.readings) / max(len(self.readings), 1)\n\n    def peak(self) -> float:\n        return max(self.readings, default=0.0)\n\n\ndef load_station(path: str) -> Station:\n    with open(path, \"r\", encoding=\"utf-8\") as handle:\n        payload = json.load(handle)\n    return Station(name=payload[\"name\"], readings=[float(v) for v in payload[\"values\"]])\n\n\ndef summarise(stations: Iterable[Station]) -> dict:\n    out = {}\n    for station in stations:\n        out[station.name] = {\"mean\": station.mean(), \"peak\": station.peak()}\n    return out\n\n\ndef main() -> None:\n    paths = sorted(p for p in os.listdir(\"data\") if p.endswith(\".json\"))\n    stations = [load_station(os.path.join(\"data\", p)) for p in paths]\n    print(json.dumps(summarise(stations), indent=2))\n\n\nif __name__ == \"__main__\":\n    main()\n```\n",
+  "has_new_line": true,
+  "truncated": false,
+  "stop_type": "limit",
+  "stopping_word": "",
+  "tokens_cached": 594,
+  "timings": {
+   "cache_n": 0,
+   "prompt_n": 339,
+   "prompt_ms": 1097.762,
+   "prompt_per_token_ms": 3.2382359882005898,
+   "prompt_per_second": 308.8101063800715,
+   "predicted_n": 256,
+   "predicted_ms": 5781.41,
+   "predicted_per_token_ms": 22.672196078431373,
+   "predicted_per_second": 44.106887420196806,
+   "draft_n": 191,
+   "draft_n_accepted": 159
+  }
+ }
+}

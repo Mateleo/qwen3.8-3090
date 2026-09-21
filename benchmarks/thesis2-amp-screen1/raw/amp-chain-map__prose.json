@@ -1,0 +1,145 @@
+{
+ "row": {
+  "tag": "amp-screen1",
+  "profile": "amp-chain-map",
+  "note": "chained MTP with the shortlist",
+  "fixture": "prose",
+  "temperature": 0.0,
+  "load_s": 36.21,
+  "wall_s": 5.377,
+  "prompt_n": 66,
+  "prompt_per_second": 194.22675679572936,
+  "predicted_n": 256,
+  "predicted_per_second": 51.6269995845545,
+  "draft_n": 260,
+  "draft_n_accepted": 167,
+  "tokens_evaluated": 66,
+  "tokens_predicted": 256,
+  "tokens_cached": 321,
+  "stop_type": "limit",
+  "sha256": "c85d12560d0be9f8b32c049866a2fdaf089698d37011d6bcbbf1fa4f48a20ffc",
+  "chars": 1243,
+  "gpu": {
+   "vram_mib": 23274,
+   "watts": 228.37,
+   "sm_mhz": 1215,
+   "temp_c": 60
+  }
+ },
+ "raw": {
+  "index": 0,
+  "content": "<think>\nThe user wants a continuous prose explanation (no lists, no headings) covering three things:\n1. Why hysteresis losses appear in ferromagnetic materials in a switching magnetic field\n2. How domain wall motion and pinning contribute to them\n3. How a designer of a small transformer would keep them low without changing the operating frequency\n\nLet me write this as flowing, connected prose. I need to be thorough and technically accurate while maintaining a narrative flow. Let me think through the physics carefully.\n\nHysteresis losses: When a ferromagnetic material is subjected to a time-varying (switching) magnetic field, the magnetization doesn't follow the applied field instantaneously or reversibly. The B-H curve forms a loop. The area of this loop represents energy dissipated per unit volume per cycle. This energy is lost as heat. The reason for the loop is that the internal magnetic state (domain configuration) has a memory of its history \u2014 it's not a single-valued function of the applied field.\n\nDomain wall motion and pinning: Ferromagnetic materials are divided into domains where magnetization is uniform. When an external field is applied, domains aligned with the field grow (domain wall motion) and domains rotate",
+  "tokens": [],
+  "id_slot": 0,
+  "stop": true,
+  "model": "/home/mateleo/models/Qwen3.8-27B/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+  "tokens_predicted": 256,
+  "tokens_evaluated": 66,
+  "generation_settings": {
+   "seed": 4294967295,
+   "temperature": 0.0,
+   "dynatemp_range": 0.0,
+   "dynatemp_exponent": 1.0,
+   "top_k": 0,
+   "top_p": 1.0,
+   "min_p": 0.0,
+   "top_n_sigma": -1.0,
+   "xtc_probability": 0.0,
+   "xtc_threshold": 0.10000000149011612,
+   "typical_p": 1.0,
+   "repeat_last_n": 64,
+   "repeat_penalty": 1.0,
+   "presence_penalty": 0.0,
+   "frequency_penalty": 0.0,
+   "dry_multiplier": 0.0,
+   "dry_base": 1.75,
+   "dry_allowed_length": 2,
+   "dry_penalty_last_n": 64,
+   "dry_sequence_breakers": [
+    "\n",
+    ":",
+    "\"",
+    "*"
+   ],
+   "mirostat": 0,
+   "mirostat_tau": 5.0,
+   "mirostat_eta": 0.10000000149011612,
+   "adaptive_target": -1.0,
+   "adaptive_decay": 0.8999999761581421,
+   "stop": [],
+   "max_tokens": 256,
+   "n_predict": 256,
+   "n_keep": 0,
+   "n_discard": 0,
+   "ignore_eos": true,
+   "stream": false,
+   "logit_bias": [
+    {
+     "bias": null,
+     "token": 248044
+    },
+    {
+     "bias": null,
+     "token": 248046
+    },
+    {
+     "bias": null,
+     "token": 248063
+    },
+    {
+     "bias": null,
+     "token": 248064
+    },
+    {
+     "bias": null,
+     "token": 248065
+    }
+   ],
+   "n_probs": 0,
+   "min_keep": 0,
+   "grammar": "",
+   "grammar_lazy": false,
+   "grammar_triggers": [],
+   "preserved_tokens": [],
+   "chat_format": "Content-only",
+   "reasoning_format": "deepseek",
+   "reasoning_in_content": false,
+   "generation_prompt": "",
+   "samplers": [
+    "penalties",
+    "dry",
+    "top_n_sigma",
+    "top_k",
+    "typ_p",
+    "top_p",
+    "min_p",
+    "xtc",
+    "temperature"
+   ],
+   "speculative.types": "none,draft-mtp",
+   "timings_per_token": false,
+   "post_sampling_probs": false,
+   "backend_sampling": true,
+   "lora": []
+  },
+  "prompt": "Explain, in continuous prose, why hysteresis losses appear in ferromagnetic\nmaterials in a switching magnetic field, how domain wall motion and pinning\ncontribute to them, and how a designer of a small transformer would keep them\nlow without changing the operating frequency. Do not use lists or headings.\n",
+  "has_new_line": true,
+  "truncated": false,
+  "stop_type": "limit",
+  "stopping_word": "",
+  "tokens_cached": 321,
+  "timings": {
+   "cache_n": 0,
+   "prompt_n": 66,
+   "prompt_ms": 339.809,
+   "prompt_per_token_ms": 5.1486212121212125,
+   "prompt_per_second": 194.22675679572936,
+   "predicted_n": 256,
+   "predicted_ms": 4939.276,
+   "predicted_per_token_ms": 19.36970980392157,
+   "predicted_per_second": 51.6269995845545,
+   "draft_n": 260,
+   "draft_n_accepted": 167
+  }
+ }
+}

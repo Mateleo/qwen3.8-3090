@@ -1,0 +1,145 @@
+{
+ "row": {
+  "tag": "stock-screen2",
+  "profile": "stock-be-ub1024",
+  "note": "GPU target sampling, MTP2, UB1024 prefill",
+  "fixture": "novel-code",
+  "temperature": 0.0,
+  "load_s": 42.45,
+  "wall_s": 8.312,
+  "prompt_n": 135,
+  "prompt_per_second": 67.76979154012123,
+  "predicted_n": 256,
+  "predicted_per_second": 40.48468583407502,
+  "draft_n": 198,
+  "draft_n_accepted": 155,
+  "tokens_evaluated": 135,
+  "tokens_predicted": 256,
+  "tokens_cached": 390,
+  "stop_type": "limit",
+  "sha256": "2a49efa29511adb3a4279193b57d8e2b7ff5b5190d4f0ca59a233abf1da21c6b",
+  "chars": 1191,
+  "gpu": {
+   "vram_mib": 23561,
+   "watts": 232.08,
+   "sm_mhz": 1320,
+   "temp_c": 59
+  }
+ },
+ "raw": {
+  "index": 0,
+  "content": "\n\n<think>\nThe user wants a Python 3.12 module that solves a Resource-Constrained Project Scheduling Problem (RCPSP). Let me break down what's needed:\n\n1. Directed graph of tasks with integer durations\n2. Set of resource types with fixed capacities\n3. Compute a schedule minimizing makespan\n4. Constraints: task starts when all predecessors finished AND resources are free\n5. Return schedule and makespan\n6. Use only standard library: heapq, collections, dataclasses\n7. Input parsing for a compact text format\n8. Deterministic ordering of tie-breaks\n9. Self-test in __main__ block\n10. Output the module only, no explanation\n\nFor the algorithm, since RCPSP is NP-hard, I'll implement a priority-based list scheduling heuristic (which is the standard approach for this). The priority rule will be deterministic - I'll use a combination of topological order and resource availability.\n\nActually, let me think about this more carefully. The problem says \"compute a schedule minimising the makespan.\" For small instances, we could do exact search, but for general cases, a heuristic is standard. Let me implement a priority-based list scheduling algorithm with a deterministic tie-breaking rule.\n\n",
+  "tokens": [],
+  "id_slot": 0,
+  "stop": true,
+  "model": "/home/mateleo/models/Qwen3.8-27B/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+  "tokens_predicted": 256,
+  "tokens_evaluated": 135,
+  "generation_settings": {
+   "seed": 4294967295,
+   "temperature": 0.0,
+   "dynatemp_range": 0.0,
+   "dynatemp_exponent": 1.0,
+   "top_k": 0,
+   "top_p": 1.0,
+   "min_p": 0.0,
+   "top_n_sigma": -1.0,
+   "xtc_probability": 0.0,
+   "xtc_threshold": 0.10000000149011612,
+   "typical_p": 1.0,
+   "repeat_last_n": 64,
+   "repeat_penalty": 1.0,
+   "presence_penalty": 0.0,
+   "frequency_penalty": 0.0,
+   "dry_multiplier": 0.0,
+   "dry_base": 1.75,
+   "dry_allowed_length": 2,
+   "dry_penalty_last_n": 64,
+   "dry_sequence_breakers": [
+    "\n",
+    ":",
+    "\"",
+    "*"
+   ],
+   "mirostat": 0,
+   "mirostat_tau": 5.0,
+   "mirostat_eta": 0.10000000149011612,
+   "adaptive_target": -1.0,
+   "adaptive_decay": 0.8999999761581421,
+   "stop": [],
+   "max_tokens": 256,
+   "n_predict": 256,
+   "n_keep": 0,
+   "n_discard": 0,
+   "ignore_eos": true,
+   "stream": false,
+   "logit_bias": [
+    {
+     "bias": null,
+     "token": 248044
+    },
+    {
+     "bias": null,
+     "token": 248046
+    },
+    {
+     "bias": null,
+     "token": 248063
+    },
+    {
+     "bias": null,
+     "token": 248064
+    },
+    {
+     "bias": null,
+     "token": 248065
+    }
+   ],
+   "n_probs": 0,
+   "min_keep": 0,
+   "grammar": "",
+   "grammar_lazy": false,
+   "grammar_triggers": [],
+   "preserved_tokens": [],
+   "chat_format": "Content-only",
+   "reasoning_format": "deepseek",
+   "reasoning_in_content": false,
+   "generation_prompt": "",
+   "samplers": [
+    "penalties",
+    "dry",
+    "top_n_sigma",
+    "top_k",
+    "typ_p",
+    "top_p",
+    "min_p",
+    "xtc",
+    "temperature"
+   ],
+   "speculative.types": "none,draft-mtp",
+   "timings_per_token": false,
+   "post_sampling_probs": false,
+   "backend_sampling": true,
+   "lora": []
+  },
+  "prompt": "Write a Python 3.12 module that solves the following problem from scratch.\nProblem: given a directed graph of tasks with integer durations and a set of\nresource types with fixed capacities, compute a schedule minimising the makespan\nunder the constraint that a task may only start when every predecessor finished\nand the resources it needs are free. Return the schedule and the makespan.\nUse only the standard library (heapq, collections, dataclasses). Include input\nparsing for a compact text format, deterministic ordering of tie-breaks, and a\nself-test in a __main__ block. Explain none of it; output the module only.\n",
+  "has_new_line": true,
+  "truncated": false,
+  "stop_type": "limit",
+  "stopping_word": "",
+  "tokens_cached": 390,
+  "timings": {
+   "cache_n": 0,
+   "prompt_n": 135,
+   "prompt_ms": 1992.038,
+   "prompt_per_token_ms": 14.755837037037038,
+   "prompt_per_second": 67.76979154012123,
+   "predicted_n": 256,
+   "predicted_ms": 6298.678,
+   "predicted_per_token_ms": 24.700698039215684,
+   "predicted_per_second": 40.48468583407502,
+   "draft_n": 198,
+   "draft_n_accepted": 155
+  }
+ }
+}

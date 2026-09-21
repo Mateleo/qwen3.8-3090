@@ -1,0 +1,46 @@
+{
+ "row": {
+  "tag": "confirm2",
+  "profile": "stock-be-embed",
+  "note": "GPU target sampling on the embedded MTP head",
+  "fixture": "patch",
+  "seed": 11,
+  "temp": 1.0,
+  "load_s": 37.16,
+  "wall_s": 7.625,
+  "prompt_n": 390,
+  "prompt_per_second": 317.2950192817742,
+  "predicted_n": 256,
+  "predicted_per_second": 36.23266657648758,
+  "draft_n": 224,
+  "draft_n_accepted": 143,
+  "completion_tokens": 256,
+  "gpu": {
+   "vram_mib": 22528,
+   "watts": 243.84,
+   "sm_mhz": 1050,
+   "temp_c": 75
+  }
+ },
+ "usage": {
+  "completion_tokens": 256,
+  "prompt_tokens": 390,
+  "total_tokens": 646,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 390,
+  "prompt_ms": 1229.14,
+  "prompt_per_token_ms": 3.151641025641026,
+  "prompt_per_second": 317.2950192817742,
+  "predicted_n": 256,
+  "predicted_ms": 7037.848,
+  "predicted_per_token_ms": 27.599403921568626,
+  "predicted_per_second": 36.23266657648758,
+  "draft_n": 224,
+  "draft_n_accepted": 143
+ }
+}

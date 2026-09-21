@@ -1,0 +1,326 @@
+0.00.096.680 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.096.894 I srv          init: The UI is disabled
+0.00.096.924 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.097.024 W srv  llama_server: -----------------
+0.00.097.052 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.097.053 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.097.053 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.097.053 W srv  llama_server: -----------------
+0.00.098.603 I srv    load_model: loading model '/home/mateleo/models/Qwen3.8-27B/Qwen3.8-27B-UD-Q4_K_XL.gguf'
+0.30.287.744 I cmn          init: llama threadpool init, n_threads = 4
+0.30.606.789 I common_speculative_init_result: loading draft model '/home/mateleo/models/Qwen3.8-27B/MTP/mtp-Qwen3.8-27B-Q4_0.gguf'
+0.34.294.051 I srv    load_model: loaded multimodal model, '/home/mateleo/models/Qwen3.8-27B/mmproj-F16.gguf'
+0.34.294.131 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 131072, kv_unified = 'false'
+0.34.294.833 I spec common_specu: exact p/q drafting enabled (default; LLAMA_SPEC_PQ=0 disables): draft tokens are sampled at the request's temperature and verified by rejection sampling
+0.34.395.325 I spec common_specu: exact p/q drafting enabled (default; LLAMA_SPEC_PQ=0 disables): draft tokens are sampled at the request's temperature and verified by rejection sampling
+0.34.753.680 W srv          init: --cache-idle-slots requires --cache-ram, disabling
+0.34.768.199 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.34.768.969 I srv  llama_server: model loaded
+0.34.769.003 I srv  llama_server: listening on http://127.0.0.1:2233
+0.36.571.283 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.36.571.396 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.37.523.990 W spec      process: stale draft KV for seq 0 at process: pos_max 130 >= batch start 0, trimming
+0.37.773.295 W spec      process: stale draft KV for seq 0 at process: pos_max 134 >= batch start 131, trimming
+0.38.043.540 W spec      process: stale draft KV for seq 0 at process: pos_max 143 >= batch start 135, trimming
+0.38.184.088 W spec      process: stale draft KV for seq 0 at process: pos_max 144 >= batch start 136, trimming
+0.38.281.819 W spec      process: stale draft KV for seq 0 at process: pos_max 149 >= batch start 141, trimming
+0.38.394.746 W spec      process: stale draft KV for seq 0 at process: pos_max 158 >= batch start 150, trimming
+0.38.492.472 W spec      process: stale draft KV for seq 0 at process: pos_max 163 >= batch start 155, trimming
+0.38.583.618 W spec      process: stale draft KV for seq 0 at process: pos_max 165 >= batch start 157, trimming
+0.38.675.891 W spec      process: stale draft KV for seq 0 at process: pos_max 168 >= batch start 160, trimming
+0.38.785.041 W spec      process: stale draft KV for seq 0 at process: pos_max 175 >= batch start 167, trimming
+0.38.889.539 W spec      process: stale draft KV for seq 0 at process: pos_max 182 >= batch start 174, trimming
+0.38.990.945 W spec      process: stale draft KV for seq 0 at process: pos_max 189 >= batch start 181, trimming
+0.39.081.434 W spec      process: stale draft KV for seq 0 at process: pos_max 192 >= batch start 184, trimming
+0.39.184.512 W spec      process: stale draft KV for seq 0 at process: pos_max 201 >= batch start 193, trimming
+0.39.273.588 W spec      process: stale draft KV for seq 0 at process: pos_max 203 >= batch start 195, trimming
+0.39.371.605 W spec      process: stale draft KV for seq 0 at process: pos_max 208 >= batch start 200, trimming
+0.39.460.480 W spec      process: stale draft KV for seq 0 at process: pos_max 210 >= batch start 202, trimming
+0.39.545.603 W spec      process: stale draft KV for seq 0 at process: pos_max 211 >= batch start 203, trimming
+0.39.650.057 W spec      process: stale draft KV for seq 0 at process: pos_max 218 >= batch start 210, trimming
+0.39.748.640 W spec      process: stale draft KV for seq 0 at process: pos_max 225 >= batch start 217, trimming
+0.39.850.483 W spec      process: stale draft KV for seq 0 at process: pos_max 233 >= batch start 225, trimming
+0.39.957.649 W spec      process: stale draft KV for seq 0 at process: pos_max 242 >= batch start 234, trimming
+0.40.054.032 W spec      process: stale draft KV for seq 0 at process: pos_max 249 >= batch start 241, trimming
+0.40.143.330 W spec      process: stale draft KV for seq 0 at process: pos_max 252 >= batch start 244, trimming
+0.40.271.263 W spec      process: stale draft KV for seq 0 at process: pos_max 261 >= batch start 253, trimming
+0.40.383.978 W spec      process: stale draft KV for seq 0 at process: pos_max 269 >= batch start 261, trimming
+0.40.473.669 W spec      process: stale draft KV for seq 0 at process: pos_max 272 >= batch start 264, trimming
+0.40.565.423 W spec      process: stale draft KV for seq 0 at process: pos_max 276 >= batch start 268, trimming
+0.40.655.759 W spec      process: stale draft KV for seq 0 at process: pos_max 281 >= batch start 273, trimming
+0.40.739.806 W spec      process: stale draft KV for seq 0 at process: pos_max 284 >= batch start 276, trimming
+0.40.832.060 W spec      process: stale draft KV for seq 0 at process: pos_max 288 >= batch start 280, trimming
+0.40.840.667 I slot print_timing: id  0 | task 0 | n_gen =    148, tg =  48.07 t/s, tg_3s =  48.38 t/s
+0.40.915.862 W spec      process: stale draft KV for seq 0 at process: pos_max 290 >= batch start 282, trimming
+0.41.004.322 W spec      process: stale draft KV for seq 0 at process: pos_max 292 >= batch start 284, trimming
+0.41.106.273 W spec      process: stale draft KV for seq 0 at process: pos_max 301 >= batch start 293, trimming
+0.41.194.662 W spec      process: stale draft KV for seq 0 at process: pos_max 304 >= batch start 296, trimming
+0.41.284.987 W spec      process: stale draft KV for seq 0 at process: pos_max 309 >= batch start 301, trimming
+0.41.377.676 W spec      process: stale draft KV for seq 0 at process: pos_max 314 >= batch start 306, trimming
+0.41.463.259 W spec      process: stale draft KV for seq 0 at process: pos_max 316 >= batch start 308, trimming
+0.41.546.264 W spec      process: stale draft KV for seq 0 at process: pos_max 317 >= batch start 309, trimming
+0.41.631.924 W spec      process: stale draft KV for seq 0 at process: pos_max 319 >= batch start 311, trimming
+0.41.720.423 W spec      process: stale draft KV for seq 0 at process: pos_max 323 >= batch start 315, trimming
+0.41.808.444 W spec      process: stale draft KV for seq 0 at process: pos_max 326 >= batch start 318, trimming
+0.41.894.903 W spec      process: stale draft KV for seq 0 at process: pos_max 329 >= batch start 321, trimming
+0.41.978.984 W spec      process: stale draft KV for seq 0 at process: pos_max 330 >= batch start 322, trimming
+0.42.061.414 W spec      process: stale draft KV for seq 0 at process: pos_max 331 >= batch start 323, trimming
+0.42.144.708 W spec      process: stale draft KV for seq 0 at process: pos_max 333 >= batch start 325, trimming
+0.42.233.985 W spec      process: stale draft KV for seq 0 at process: pos_max 337 >= batch start 329, trimming
+0.42.322.827 W spec      process: stale draft KV for seq 0 at process: pos_max 340 >= batch start 332, trimming
+0.42.407.003 W spec      process: stale draft KV for seq 0 at process: pos_max 342 >= batch start 334, trimming
+0.42.489.596 W spec      process: stale draft KV for seq 0 at process: pos_max 343 >= batch start 335, trimming
+0.42.574.320 W spec      process: stale draft KV for seq 0 at process: pos_max 345 >= batch start 337, trimming
+0.42.662.578 W spec      process: stale draft KV for seq 0 at process: pos_max 350 >= batch start 342, trimming
+0.42.748.196 W spec      process: stale draft KV for seq 0 at process: pos_max 352 >= batch start 344, trimming
+0.42.832.293 W spec      process: stale draft KV for seq 0 at process: pos_max 353 >= batch start 345, trimming
+0.42.926.913 W spec      process: stale draft KV for seq 0 at process: pos_max 359 >= batch start 351, trimming
+0.43.010.644 W spec      process: stale draft KV for seq 0 at process: pos_max 360 >= batch start 352, trimming
+0.43.106.698 W spec      process: stale draft KV for seq 0 at process: pos_max 366 >= batch start 358, trimming
+0.43.192.441 W spec      process: stale draft KV for seq 0 at process: pos_max 369 >= batch start 361, trimming
+0.43.275.392 W spec      process: stale draft KV for seq 0 at process: pos_max 371 >= batch start 363, trimming
+0.43.368.223 W spec      process: stale draft KV for seq 0 at process: pos_max 376 >= batch start 368, trimming
+0.43.454.726 W spec      process: stale draft KV for seq 0 at process: pos_max 378 >= batch start 370, trimming
+0.43.547.749 W spec      process: stale draft KV for seq 0 at process: pos_max 382 >= batch start 374, trimming
+0.43.633.055 W spec      process: stale draft KV for seq 0 at process: pos_max 384 >= batch start 376, trimming
+0.43.713.699 W spec      process: stale draft KV for seq 0 at process: pos_max 385 >= batch start 377, trimming
+0.43.803.691 W spec      process: stale draft KV for seq 0 at process: pos_max 388 >= batch start 380, trimming
+0.43.976.801 W spec      process: stale draft KV for seq 0 at process: pos_max 389 >= batch start 382, trimming
+0.43.986.792 I slot print_timing: id  0 | task 0 | n_gen =    250, tg =  40.13 t/s, tg_3s =  32.42 t/s
+0.44.145.810 W spec      process: stale draft KV for seq 0 at process: pos_max 389 >= batch start 384, trimming
+0.44.288.776 W spec      process: stale draft KV for seq 0 at process: pos_max 389 >= batch start 388, trimming
+0.44.297.815 I slot print_timing: id  0 | task 0 | prompt eval time =    1210.31 ms /   135 tokens (    8.97 ms per token,   111.54 tokens per second)
+0.44.297.863 I slot print_timing: id  0 | task 0 |        eval time =    6515.89 ms /   256 tokens (   25.55 ms per token,    39.14 tokens per second)
+0.44.297.864 I slot print_timing: id  0 | task 0 |       total time =    7726.20 ms /   391 tokens
+0.44.297.871 I slot print_timing: id  0 | task 0 |    graphs reused =         61
+0.44.297.881 I slot print_timing: id  0 | task 0 | draft acceptance = 0.36557 (  189 accepted /   517 generated), mean len =  3.86
+0.44.304.532 I slot      release: id  0 | task 0 | stop processing: n_tokens = 390, truncated = 0
+0.44.501.169 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 5662347485
+0.44.501.270 I slot launch_slot_: id  0 | task 69 | processing task, is_child = 0
+0.44.707.232 W spec      process: stale draft KV for seq 0 at process: pos_max 61 >= batch start 0, trimming
+0.44.970.255 W spec      process: stale draft KV for seq 0 at process: pos_max 65 >= batch start 62, trimming
+0.45.082.617 W spec      process: stale draft KV for seq 0 at process: pos_max 74 >= batch start 66, trimming
+0.45.183.000 W spec      process: stale draft KV for seq 0 at process: pos_max 78 >= batch start 70, trimming
+0.45.270.301 W spec      process: stale draft KV for seq 0 at process: pos_max 80 >= batch start 72, trimming
+0.45.359.827 W spec      process: stale draft KV for seq 0 at process: pos_max 83 >= batch start 75, trimming
+0.45.446.921 W spec      process: stale draft KV for seq 0 at process: pos_max 85 >= batch start 77, trimming
+0.45.536.839 W spec      process: stale draft KV for seq 0 at process: pos_max 89 >= batch start 81, trimming
+0.45.619.755 W spec      process: stale draft KV for seq 0 at process: pos_max 90 >= batch start 82, trimming
+0.45.702.827 W spec      process: stale draft KV for seq 0 at process: pos_max 92 >= batch start 84, trimming
+0.45.804.584 W spec      process: stale draft KV for seq 0 at process: pos_max 101 >= batch start 93, trimming
+0.45.903.333 W spec      process: stale draft KV for seq 0 at process: pos_max 109 >= batch start 101, trimming
+0.46.006.408 W spec      process: stale draft KV for seq 0 at process: pos_max 118 >= batch start 110, trimming
+0.46.109.573 W spec      process: stale draft KV for seq 0 at process: pos_max 127 >= batch start 119, trimming
+0.46.210.163 W spec      process: stale draft KV for seq 0 at process: pos_max 136 >= batch start 128, trimming
+0.46.310.878 W spec      process: stale draft KV for seq 0 at process: pos_max 145 >= batch start 137, trimming
+0.46.406.732 W spec      process: stale draft KV for seq 0 at process: pos_max 152 >= batch start 144, trimming
+0.46.495.461 W spec      process: stale draft KV for seq 0 at process: pos_max 155 >= batch start 147, trimming
+0.46.578.663 W spec      process: stale draft KV for seq 0 at process: pos_max 156 >= batch start 148, trimming
+0.46.664.193 W spec      process: stale draft KV for seq 0 at process: pos_max 159 >= batch start 151, trimming
+0.46.755.706 W spec      process: stale draft KV for seq 0 at process: pos_max 165 >= batch start 157, trimming
+0.46.847.643 W spec      process: stale draft KV for seq 0 at process: pos_max 171 >= batch start 163, trimming
+0.46.939.307 W spec      process: stale draft KV for seq 0 at process: pos_max 175 >= batch start 167, trimming
+0.47.033.017 W spec      process: stale draft KV for seq 0 at process: pos_max 179 >= batch start 171, trimming
+0.47.116.325 W spec      process: stale draft KV for seq 0 at process: pos_max 180 >= batch start 172, trimming
+0.47.205.677 W spec      process: stale draft KV for seq 0 at process: pos_max 185 >= batch start 177, trimming
+0.47.291.329 W spec      process: stale draft KV for seq 0 at process: pos_max 187 >= batch start 179, trimming
+0.47.379.292 W spec      process: stale draft KV for seq 0 at process: pos_max 189 >= batch start 181, trimming
+0.47.471.419 W spec      process: stale draft KV for seq 0 at process: pos_max 193 >= batch start 185, trimming
+0.47.562.905 W spec      process: stale draft KV for seq 0 at process: pos_max 197 >= batch start 189, trimming
+0.47.660.658 W spec      process: stale draft KV for seq 0 at process: pos_max 205 >= batch start 197, trimming
+0.47.747.025 W spec      process: stale draft KV for seq 0 at process: pos_max 208 >= batch start 200, trimming
+0.47.836.354 W spec      process: stale draft KV for seq 0 at process: pos_max 212 >= batch start 204, trimming
+0.47.921.642 W spec      process: stale draft KV for seq 0 at process: pos_max 214 >= batch start 206, trimming
+0.48.010.309 W spec      process: stale draft KV for seq 0 at process: pos_max 216 >= batch start 208, trimming
+0.48.018.009 I slot print_timing: id  0 | task 69 | n_gen =    145, tg =  47.36 t/s, tg_3s =  47.67 t/s
+0.48.094.649 W spec      process: stale draft KV for seq 0 at process: pos_max 218 >= batch start 210, trimming
+0.48.176.696 W spec      process: stale draft KV for seq 0 at process: pos_max 220 >= batch start 212, trimming
+0.48.267.305 W spec      process: stale draft KV for seq 0 at process: pos_max 225 >= batch start 217, trimming
+0.48.352.105 W spec      process: stale draft KV for seq 0 at process: pos_max 227 >= batch start 219, trimming
+0.48.443.981 W spec      process: stale draft KV for seq 0 at process: pos_max 232 >= batch start 224, trimming
+0.48.527.066 W spec      process: stale draft KV for seq 0 at process: pos_max 233 >= batch start 225, trimming
+0.48.616.040 W spec      process: stale draft KV for seq 0 at process: pos_max 238 >= batch start 230, trimming
+0.48.698.699 W spec      process: stale draft KV for seq 0 at process: pos_max 239 >= batch start 231, trimming
+0.48.784.662 W spec      process: stale draft KV for seq 0 at process: pos_max 241 >= batch start 233, trimming
+0.48.869.055 W spec      process: stale draft KV for seq 0 at process: pos_max 243 >= batch start 235, trimming
+0.48.952.528 W spec      process: stale draft KV for seq 0 at process: pos_max 244 >= batch start 236, trimming
+0.49.042.113 W spec      process: stale draft KV for seq 0 at process: pos_max 247 >= batch start 239, trimming
+0.49.126.593 W spec      process: stale draft KV for seq 0 at process: pos_max 249 >= batch start 241, trimming
+0.49.211.748 W spec      process: stale draft KV for seq 0 at process: pos_max 252 >= batch start 244, trimming
+0.49.294.807 W spec      process: stale draft KV for seq 0 at process: pos_max 253 >= batch start 245, trimming
+0.49.378.790 W spec      process: stale draft KV for seq 0 at process: pos_max 255 >= batch start 247, trimming
+0.49.487.269 W spec      process: stale draft KV for seq 0 at process: pos_max 257 >= batch start 249, trimming
+0.49.584.219 W spec      process: stale draft KV for seq 0 at process: pos_max 258 >= batch start 250, trimming
+0.49.672.211 W spec      process: stale draft KV for seq 0 at process: pos_max 261 >= batch start 253, trimming
+0.49.766.678 W spec      process: stale draft KV for seq 0 at process: pos_max 268 >= batch start 260, trimming
+0.49.864.508 W spec      process: stale draft KV for seq 0 at process: pos_max 273 >= batch start 265, trimming
+0.49.950.927 W spec      process: stale draft KV for seq 0 at process: pos_max 275 >= batch start 267, trimming
+0.50.032.545 W spec      process: stale draft KV for seq 0 at process: pos_max 276 >= batch start 268, trimming
+0.50.130.108 W spec      process: stale draft KV for seq 0 at process: pos_max 282 >= batch start 274, trimming
+0.50.214.198 W spec      process: stale draft KV for seq 0 at process: pos_max 283 >= batch start 275, trimming
+0.50.308.274 W spec      process: stale draft KV for seq 0 at process: pos_max 289 >= batch start 281, trimming
+0.50.397.948 W spec      process: stale draft KV for seq 0 at process: pos_max 292 >= batch start 284, trimming
+0.50.483.057 W spec      process: stale draft KV for seq 0 at process: pos_max 293 >= batch start 285, trimming
+0.50.574.625 W spec      process: stale draft KV for seq 0 at process: pos_max 297 >= batch start 289, trimming
+0.50.659.530 W spec      process: stale draft KV for seq 0 at process: pos_max 299 >= batch start 291, trimming
+0.50.745.205 W spec      process: stale draft KV for seq 0 at process: pos_max 301 >= batch start 293, trimming
+0.50.829.548 W spec      process: stale draft KV for seq 0 at process: pos_max 302 >= batch start 294, trimming
+0.50.924.541 W spec      process: stale draft KV for seq 0 at process: pos_max 306 >= batch start 298, trimming
+0.51.009.936 W spec      process: stale draft KV for seq 0 at process: pos_max 307 >= batch start 299, trimming
+0.51.020.201 I slot print_timing: id  0 | task 69 | n_gen =    236, tg =  38.89 t/s, tg_3s =  30.31 t/s
+0.51.096.730 W spec      process: stale draft KV for seq 0 at process: pos_max 309 >= batch start 301, trimming
+0.51.182.477 W spec      process: stale draft KV for seq 0 at process: pos_max 311 >= batch start 303, trimming
+0.51.277.865 W spec      process: stale draft KV for seq 0 at process: pos_max 317 >= batch start 309, trimming
+0.51.425.308 W spec      process: stale draft KV for seq 0 at process: pos_max 320 >= batch start 315, trimming
+0.51.600.770 W spec      process: stale draft KV for seq 0 at process: pos_max 320 >= batch start 316, trimming
+0.51.697.900 W spec      process: stale draft KV for seq 0 at process: pos_max 320 >= batch start 318, trimming
+0.51.789.357 W spec      process: stale draft KV for seq 0 at process: pos_max 320 >= batch start 320, trimming
+0.51.793.902 I slot print_timing: id  0 | task 69 | prompt eval time =     475.05 ms /    66 tokens (    7.20 ms per token,   138.93 tokens per second)
+0.51.793.945 I slot print_timing: id  0 | task 69 |        eval time =    6817.55 ms /   256 tokens (   26.74 ms per token,    37.40 tokens per second)
+0.51.793.947 I slot print_timing: id  0 | task 69 |       total time =    7292.60 ms /   322 tokens
+0.51.793.948 I slot print_timing: id  0 | task 69 |    graphs reused =        129
+0.51.793.961 I slot print_timing: id  0 | task 69 | draft acceptance = 0.31699 (  181 accepted /   571 generated), mean len =  3.48
+0.51.794.856 I slot      release: id  0 | task 69 | stop processing: n_tokens = 321, truncated = 0
+0.52.057.904 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 5669837803
+0.52.058.007 I slot launch_slot_: id  0 | task 146 | processing task, is_child = 0
+0.52.459.308 W spec      process: stale draft KV for seq 0 at process: pos_max 334 >= batch start 0, trimming
+0.52.689.733 W spec      process: stale draft KV for seq 0 at process: pos_max 338 >= batch start 335, trimming
+0.52.776.105 W spec      process: stale draft KV for seq 0 at process: pos_max 347 >= batch start 339, trimming
+0.52.859.525 W spec      process: stale draft KV for seq 0 at process: pos_max 349 >= batch start 341, trimming
+0.52.958.529 W spec      process: stale draft KV for seq 0 at process: pos_max 352 >= batch start 344, trimming
+0.53.046.465 W spec      process: stale draft KV for seq 0 at process: pos_max 353 >= batch start 345, trimming
+0.53.135.442 W spec      process: stale draft KV for seq 0 at process: pos_max 355 >= batch start 347, trimming
+0.53.228.083 W spec      process: stale draft KV for seq 0 at process: pos_max 359 >= batch start 351, trimming
+0.53.311.840 W spec      process: stale draft KV for seq 0 at process: pos_max 360 >= batch start 352, trimming
+0.53.411.861 W spec      process: stale draft KV for seq 0 at process: pos_max 369 >= batch start 361, trimming
+0.53.509.921 W spec      process: stale draft KV for seq 0 at process: pos_max 377 >= batch start 369, trimming
+0.53.589.963 W spec      process: stale draft KV for seq 0 at process: pos_max 378 >= batch start 370, trimming
+0.53.669.822 W spec      process: stale draft KV for seq 0 at process: pos_max 379 >= batch start 371, trimming
+0.53.765.537 W spec      process: stale draft KV for seq 0 at process: pos_max 387 >= batch start 379, trimming
+0.53.853.589 W spec      process: stale draft KV for seq 0 at process: pos_max 390 >= batch start 382, trimming
+0.53.941.185 W spec      process: stale draft KV for seq 0 at process: pos_max 394 >= batch start 386, trimming
+0.54.027.989 W spec      process: stale draft KV for seq 0 at process: pos_max 396 >= batch start 388, trimming
+0.54.129.163 W spec      process: stale draft KV for seq 0 at process: pos_max 405 >= batch start 397, trimming
+0.54.218.695 W spec      process: stale draft KV for seq 0 at process: pos_max 409 >= batch start 401, trimming
+0.54.322.684 W spec      process: stale draft KV for seq 0 at process: pos_max 418 >= batch start 410, trimming
+0.54.413.183 W spec      process: stale draft KV for seq 0 at process: pos_max 423 >= batch start 415, trimming
+0.54.499.720 W spec      process: stale draft KV for seq 0 at process: pos_max 425 >= batch start 417, trimming
+0.54.582.758 W spec      process: stale draft KV for seq 0 at process: pos_max 427 >= batch start 419, trimming
+0.54.673.034 W spec      process: stale draft KV for seq 0 at process: pos_max 431 >= batch start 423, trimming
+0.54.775.774 W spec      process: stale draft KV for seq 0 at process: pos_max 440 >= batch start 432, trimming
+0.54.878.187 W spec      process: stale draft KV for seq 0 at process: pos_max 449 >= batch start 441, trimming
+0.54.985.844 W spec      process: stale draft KV for seq 0 at process: pos_max 458 >= batch start 450, trimming
+0.55.077.090 W spec      process: stale draft KV for seq 0 at process: pos_max 463 >= batch start 455, trimming
+0.55.159.675 W spec      process: stale draft KV for seq 0 at process: pos_max 465 >= batch start 457, trimming
+0.55.249.635 W spec      process: stale draft KV for seq 0 at process: pos_max 469 >= batch start 461, trimming
+0.55.331.817 W spec      process: stale draft KV for seq 0 at process: pos_max 470 >= batch start 462, trimming
+0.55.436.589 W spec      process: stale draft KV for seq 0 at process: pos_max 479 >= batch start 471, trimming
+0.55.531.273 W spec      process: stale draft KV for seq 0 at process: pos_max 486 >= batch start 478, trimming
+0.55.627.621 W spec      process: stale draft KV for seq 0 at process: pos_max 494 >= batch start 486, trimming
+0.55.717.913 W spec      process: stale draft KV for seq 0 at process: pos_max 498 >= batch start 490, trimming
+0.55.725.976 I slot print_timing: id  0 | task 146 | n_gen =    154, tg =  50.48 t/s, tg_3s =  50.80 t/s
+0.55.801.945 W spec      process: stale draft KV for seq 0 at process: pos_max 500 >= batch start 492, trimming
+0.55.892.363 W spec      process: stale draft KV for seq 0 at process: pos_max 504 >= batch start 496, trimming
+0.55.984.319 W spec      process: stale draft KV for seq 0 at process: pos_max 509 >= batch start 501, trimming
+0.56.096.125 W spec      process: stale draft KV for seq 0 at process: pos_max 514 >= batch start 506, trimming
+0.56.200.475 W spec      process: stale draft KV for seq 0 at process: pos_max 518 >= batch start 510, trimming
+0.56.292.100 W spec      process: stale draft KV for seq 0 at process: pos_max 520 >= batch start 512, trimming
+0.56.388.446 W spec      process: stale draft KV for seq 0 at process: pos_max 525 >= batch start 517, trimming
+0.56.478.365 W spec      process: stale draft KV for seq 0 at process: pos_max 530 >= batch start 522, trimming
+0.56.561.253 W spec      process: stale draft KV for seq 0 at process: pos_max 532 >= batch start 524, trimming
+0.56.655.418 W spec      process: stale draft KV for seq 0 at process: pos_max 539 >= batch start 531, trimming
+0.56.755.017 W spec      process: stale draft KV for seq 0 at process: pos_max 548 >= batch start 540, trimming
+0.56.838.252 W spec      process: stale draft KV for seq 0 at process: pos_max 550 >= batch start 542, trimming
+0.56.922.347 W spec      process: stale draft KV for seq 0 at process: pos_max 552 >= batch start 544, trimming
+0.57.012.713 W spec      process: stale draft KV for seq 0 at process: pos_max 557 >= batch start 549, trimming
+0.57.093.843 W spec      process: stale draft KV for seq 0 at process: pos_max 558 >= batch start 550, trimming
+0.57.183.071 W spec      process: stale draft KV for seq 0 at process: pos_max 563 >= batch start 555, trimming
+0.57.272.279 W spec      process: stale draft KV for seq 0 at process: pos_max 566 >= batch start 558, trimming
+0.57.379.259 W spec      process: stale draft KV for seq 0 at process: pos_max 574 >= batch start 566, trimming
+0.57.465.257 W spec      process: stale draft KV for seq 0 at process: pos_max 576 >= batch start 568, trimming
+0.57.545.841 W spec      process: stale draft KV for seq 0 at process: pos_max 577 >= batch start 569, trimming
+0.57.633.005 W spec      process: stale draft KV for seq 0 at process: pos_max 581 >= batch start 573, trimming
+0.57.720.349 W spec      process: stale draft KV for seq 0 at process: pos_max 585 >= batch start 577, trimming
+0.57.814.933 W spec      process: stale draft KV for seq 0 at process: pos_max 591 >= batch start 583, trimming
+0.57.916.778 W spec      process: stale draft KV for seq 0 at process: pos_max 593 >= batch start 590, trimming
+0.57.999.469 W spec      process: stale draft KV for seq 0 at process: pos_max 593 >= batch start 592, trimming
+0.58.069.970 W spec      process: stale draft KV for seq 0 at process: pos_max 593 >= batch start 593, trimming
+0.58.074.688 I slot print_timing: id  0 | task 146 | prompt eval time =     636.62 ms /   339 tokens (    1.88 ms per token,   532.50 tokens per second)
+0.58.074.729 I slot print_timing: id  0 | task 146 |        eval time =    5379.56 ms /   256 tokens (   21.10 ms per token,    47.40 tokens per second)
+0.58.074.730 I slot print_timing: id  0 | task 146 |       total time =    6016.18 ms /   595 tokens
+0.58.074.733 I slot print_timing: id  0 | task 146 |    graphs reused =        183
+0.58.074.746 I slot print_timing: id  0 | task 146 | draft acceptance = 0.43363 (  196 accepted /   452 generated), mean len =  4.38
+0.58.083.834 I slot      release: id  0 | task 146 | stop processing: n_tokens = 594, truncated = 0
+0.58.168.132 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 5676126781
+0.58.168.232 I slot launch_slot_: id  0 | task 208 | processing task, is_child = 0
+0.58.537.391 W spec      process: stale draft KV for seq 0 at process: pos_max 303 >= batch start 0, trimming
+0.58.747.180 W spec      process: stale draft KV for seq 0 at process: pos_max 307 >= batch start 304, trimming
+0.58.922.690 W spec      process: stale draft KV for seq 0 at process: pos_max 316 >= batch start 308, trimming
+0.59.015.879 W spec      process: stale draft KV for seq 0 at process: pos_max 318 >= batch start 310, trimming
+0.59.100.990 W spec      process: stale draft KV for seq 0 at process: pos_max 321 >= batch start 313, trimming
+0.59.185.760 W spec      process: stale draft KV for seq 0 at process: pos_max 323 >= batch start 315, trimming
+0.59.268.321 W spec      process: stale draft KV for seq 0 at process: pos_max 324 >= batch start 316, trimming
+0.59.362.611 W spec      process: stale draft KV for seq 0 at process: pos_max 329 >= batch start 321, trimming
+0.59.461.589 W spec      process: stale draft KV for seq 0 at process: pos_max 338 >= batch start 330, trimming
+0.59.557.557 W spec      process: stale draft KV for seq 0 at process: pos_max 346 >= batch start 338, trimming
+0.59.659.124 W spec      process: stale draft KV for seq 0 at process: pos_max 355 >= batch start 347, trimming
+0.59.758.801 W spec      process: stale draft KV for seq 0 at process: pos_max 364 >= batch start 356, trimming
+0.59.859.547 W spec      process: stale draft KV for seq 0 at process: pos_max 373 >= batch start 365, trimming
+0.59.958.578 W spec      process: stale draft KV for seq 0 at process: pos_max 382 >= batch start 374, trimming
+1.00.056.776 W spec      process: stale draft KV for seq 0 at process: pos_max 391 >= batch start 383, trimming
+1.00.157.723 W spec      process: stale draft KV for seq 0 at process: pos_max 400 >= batch start 392, trimming
+1.00.255.820 W spec      process: stale draft KV for seq 0 at process: pos_max 409 >= batch start 401, trimming
+1.00.355.748 W spec      process: stale draft KV for seq 0 at process: pos_max 418 >= batch start 410, trimming
+1.00.465.679 W spec      process: stale draft KV for seq 0 at process: pos_max 427 >= batch start 419, trimming
+1.00.569.716 W spec      process: stale draft KV for seq 0 at process: pos_max 436 >= batch start 428, trimming
+1.00.675.357 W spec      process: stale draft KV for seq 0 at process: pos_max 445 >= batch start 437, trimming
+1.00.786.812 W spec      process: stale draft KV for seq 0 at process: pos_max 454 >= batch start 446, trimming
+1.00.888.547 W spec      process: stale draft KV for seq 0 at process: pos_max 463 >= batch start 455, trimming
+1.00.985.399 W spec      process: stale draft KV for seq 0 at process: pos_max 472 >= batch start 464, trimming
+1.01.084.430 W spec      process: stale draft KV for seq 0 at process: pos_max 481 >= batch start 473, trimming
+1.01.185.176 W spec      process: stale draft KV for seq 0 at process: pos_max 490 >= batch start 482, trimming
+1.01.284.420 W spec      process: stale draft KV for seq 0 at process: pos_max 499 >= batch start 491, trimming
+1.01.386.446 W spec      process: stale draft KV for seq 0 at process: pos_max 508 >= batch start 500, trimming
+1.01.509.389 W spec      process: stale draft KV for seq 0 at process: pos_max 517 >= batch start 509, trimming
+1.01.616.031 W spec      process: stale draft KV for seq 0 at process: pos_max 526 >= batch start 518, trimming
+1.01.721.939 W spec      process: stale draft KV for seq 0 at process: pos_max 535 >= batch start 527, trimming
+1.01.822.050 W spec      process: stale draft KV for seq 0 at process: pos_max 544 >= batch start 536, trimming
+1.01.845.427 I slot print_timing: id  0 | task 208 | n_gen =    238, tg =  76.62 t/s, tg_3s =  76.94 t/s
+1.01.921.159 W spec      process: stale draft KV for seq 0 at process: pos_max 553 >= batch start 545, trimming
+1.02.018.061 W spec      process: stale draft KV for seq 0 at process: pos_max 562 >= batch start 554, trimming
+1.02.041.306 I slot print_timing: id  0 | task 208 | prompt eval time =     583.80 ms /   308 tokens (    1.90 ms per token,   527.57 tokens per second)
+1.02.041.349 I slot print_timing: id  0 | task 208 |        eval time =    3289.03 ms /   256 tokens (   12.90 ms per token,    77.53 tokens per second)
+1.02.041.899 I slot print_timing: id  0 | task 208 |       total time =    3872.83 ms /   564 tokens
+1.02.041.924 I slot print_timing: id  0 | task 208 |    graphs reused =        213
+1.02.041.934 I slot print_timing: id  0 | task 208 | draft acceptance = 0.87109 (  223 accepted /   256 generated), mean len =  7.97
+1.02.043.232 I slot      release: id  0 | task 208 | stop processing: n_tokens = 563, truncated = 0
+1.02.178.600 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 5680086179
+1.02.178.712 I slot launch_slot_: id  0 | task 243 | processing task, is_child = 0
+1.04.253.195 W spec      process: stale draft KV for seq 0 at process: pos_max 2047 >= batch start 0, trimming
+1.06.394.150 W spec      process: stale draft KV for seq 0 at process: pos_max 4095 >= batch start 2048, trimming
+1.06.463.189 I slot print_timing: id  0 | task 243 | prompt processing, n_tokens =   4096, progress = 0.25, t =   3.94 s / 1040.50 tokens per second
+1.08.561.526 W spec      process: stale draft KV for seq 0 at process: pos_max 6143 >= batch start 4096, trimming
+1.08.656.222 I slot print_timing: id  0 | task 243 | prompt processing, n_tokens =   6144, progress = 0.37, t =   6.08 s / 1010.23 tokens per second
+1.08.218.626 W spec      process: stale draft KV for seq 0 at process: pos_max 8191 >= batch start 6144, trimming
+1.08.314.497 I slot print_timing: id  0 | task 243 | prompt processing, n_tokens =   8192, progress = 0.50, t =   8.32 s / 984.92 tokens per second
+1.10.509.419 W spec      process: stale draft KV for seq 0 at process: pos_max 10239 >= batch start 8192, trimming
+1.10.625.330 I slot print_timing: id  0 | task 243 | prompt processing, n_tokens =  10240, progress = 0.62, t =  10.58 s / 967.53 tokens per second
+1.12.887.397 W spec      process: stale draft KV for seq 0 at process: pos_max 12287 >= batch start 10240, trimming
+1.12.974.045 I slot print_timing: id  0 | task 243 | prompt processing, n_tokens =  12288, progress = 0.75, t =  12.95 s / 948.56 tokens per second
+1.15.336.122 W spec      process: stale draft KV for seq 0 at process: pos_max 14335 >= batch start 12288, trimming
+1.15.441.083 I slot print_timing: id  0 | task 243 | prompt processing, n_tokens =  14336, progress = 0.87, t =  15.36 s / 933.29 tokens per second
+1.17.293.335 W spec      process: stale draft KV for seq 0 at process: pos_max 15880 >= batch start 14336, trimming
+1.17.391.479 I slot print_timing: id  0 | task 243 | prompt processing, n_tokens =  15881, progress = 0.97, t =  17.56 s / 904.44 tokens per second
+1.18.172.898 W spec      process: stale draft KV for seq 0 at process: pos_max 16392 >= batch start 15881, trimming
+1.18.197.974 I slot print_timing: id  0 | task 243 | prompt processing, n_tokens =  16393, progress = 1.00, t =  18.31 s / 895.17 tokens per second
+1.18.462.330 W spec      process: stale draft KV for seq 0 at process: pos_max 16396 >= batch start 16393, trimming
+1.18.577.817 W spec      process: stale draft KV for seq 0 at process: pos_max 16403 >= batch start 16397, trimming
+1.18.698.300 W spec      process: stale draft KV for seq 0 at process: pos_max 16403 >= batch start 16398, trimming
+1.18.799.264 W spec      process: stale draft KV for seq 0 at process: pos_max 16403 >= batch start 16399, trimming
+1.18.819.422 I slot print_timing: id  0 | task 243 | prompt eval time =   18849.99 ms / 16397 tokens (    1.15 ms per token,   869.87 tokens per second)
+1.18.819.473 I slot print_timing: id  0 | task 243 |        eval time =     351.83 ms /     8 tokens (   50.26 ms per token,    19.90 tokens per second)
+1.18.819.475 I slot print_timing: id  0 | task 243 |       total time =   19201.82 ms / 16405 tokens
+1.18.819.892 I slot print_timing: id  0 | task 243 |    graphs reused =        213
+1.18.819.948 I slot print_timing: id  0 | task 243 | draft acceptance = 0.26667 (    4 accepted /    15 generated), mean len =  2.33
+1.18.831.691 I slot      release: id  0 | task 243 | stop processing: n_tokens = 16404, truncated = 0
+1.18.908.086 I srv    operator(): operator(): cleaning up before exit...

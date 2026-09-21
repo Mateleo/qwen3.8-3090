@@ -1,0 +1,46 @@
+{
+ "row": {
+  "tag": "confirm1",
+  "profile": "stock-be-mtp2",
+  "note": "GPU target sampling with MTP2",
+  "fixture": "prefill8k",
+  "seed": 7,
+  "temp": 1.0,
+  "load_s": 36.15,
+  "wall_s": 33.678,
+  "prompt_n": 16449,
+  "prompt_per_second": 791.3533354395677,
+  "predicted_n": 512,
+  "predicted_per_second": 30.683717286113474,
+  "draft_n": 474,
+  "draft_n_accepted": 274,
+  "completion_tokens": 512,
+  "gpu": {
+   "vram_mib": 23036,
+   "watts": 241.97,
+   "sm_mhz": 795,
+   "temp_c": 74
+  }
+ },
+ "usage": {
+  "completion_tokens": 512,
+  "prompt_tokens": 16449,
+  "total_tokens": 16961,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 16449,
+  "prompt_ms": 20785.911,
+  "prompt_per_token_ms": 1.2636580339230348,
+  "prompt_per_second": 791.3533354395677,
+  "predicted_n": 512,
+  "predicted_ms": 16653.784,
+  "predicted_per_token_ms": 32.590575342465755,
+  "predicted_per_second": 30.683717286113474,
+  "draft_n": 474,
+  "draft_n_accepted": 274
+ }
+}

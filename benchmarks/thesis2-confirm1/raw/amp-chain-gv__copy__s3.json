@@ -1,0 +1,46 @@
+{
+ "row": {
+  "tag": "confirm1",
+  "profile": "amp-chain-gv",
+  "note": "fork, chained MTP3, GPU sampling and GPU verification",
+  "fixture": "copy",
+  "seed": 3,
+  "temp": 1.0,
+  "load_s": 36.21,
+  "wall_s": 11.52,
+  "prompt_n": 359,
+  "prompt_per_second": 262.29019524180745,
+  "predicted_n": 512,
+  "predicted_per_second": 50.513467918609855,
+  "draft_n": 564,
+  "draft_n_accepted": 323,
+  "completion_tokens": 512,
+  "gpu": {
+   "vram_mib": 23436,
+   "watts": 243.33,
+   "sm_mhz": 660,
+   "temp_c": 74
+  }
+ },
+ "usage": {
+  "completion_tokens": 512,
+  "prompt_tokens": 359,
+  "total_tokens": 871,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 359,
+  "prompt_ms": 1368.713,
+  "prompt_per_token_ms": 3.8125710306406684,
+  "prompt_per_second": 262.29019524180745,
+  "predicted_n": 512,
+  "predicted_ms": 10116.114,
+  "predicted_per_token_ms": 19.796700587084146,
+  "predicted_per_second": 50.513467918609855,
+  "draft_n": 564,
+  "draft_n_accepted": 323
+ }
+}
