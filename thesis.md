@@ -74,6 +74,13 @@ has the *most* headroom (speculative sidecar dropped, about 2.1 GiB free for the
 Windows desktop). `--cache-ram 0` is kept everywhere, so no run parks state in
 host RAM, and no run used `mlock` or CPU offload.
 
+Spot check through the launcher itself, two identical coding prompts sent to the
+chat endpoint at production sampling, 200 output tokens, single observation each
+(`benchmarks/api-probe.py`): `QWEN_SERVER_BUILD=stock` served 32.06 and 29.56
+tok/s, `QWEN_SERVER_BUILD=ampere` served 46.05 and 39.29 tok/s. Same prompts,
+same machine state, about ten minutes apart. That is +44% and +33%, in line with
+the +22.7% fixture mean above and independent of the harness's own fixtures.
+
 ## 2. Corrections to the first pass
 
 The first pass reported 52.03 tok/s for MTP3 on a 256-token greedy screen and
