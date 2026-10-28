@@ -1,0 +1,46 @@
+{
+ "row": {
+  "tag": "p3-confirm1",
+  "profile": "amp-be-gv-embed-slack",
+  "note": "promoted fork profile + compute slack (MTP shares the target compute buffer)",
+  "fixture": "copy",
+  "seed": 7,
+  "temp": 1.0,
+  "load_s": 33.33,
+  "wall_s": 5.883,
+  "prompt_n": 359,
+  "prompt_per_second": 431.75192664787323,
+  "predicted_n": 256,
+  "predicted_per_second": 50.55750053234075,
+  "draft_n": 228,
+  "draft_n_accepted": 140,
+  "completion_tokens": 256,
+  "gpu": {
+   "vram_mib": 22349,
+   "watts": 242.95,
+   "sm_mhz": 1290,
+   "temp_c": 68
+  }
+ },
+ "usage": {
+  "completion_tokens": 256,
+  "prompt_tokens": 359,
+  "total_tokens": 615,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 359,
+  "prompt_ms": 831.496,
+  "prompt_per_token_ms": 2.316144846796657,
+  "prompt_per_second": 431.75192664787323,
+  "predicted_n": 256,
+  "predicted_ms": 5043.762,
+  "predicted_per_token_ms": 19.77945882352941,
+  "predicted_per_second": 50.55750053234075,
+  "draft_n": 228,
+  "draft_n_accepted": 140
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "row": {
+  "tag": "p3-confirm2",
+  "profile": "amp-be-gv-embed",
+  "note": "fork, embedded MTP head, shortlist, GPU sampling and GPU verification",
+  "fixture": "prefill8k",
+  "seed": 7,
+  "temp": 1.0,
+  "load_s": 33.08,
+  "wall_s": 21.173,
+  "prompt_n": 16449,
+  "prompt_per_second": 880.8271732371622,
+  "predicted_n": 128,
+  "predicted_per_second": 36.593296626703136,
+  "draft_n": 129,
+  "draft_n_accepted": 62,
+  "completion_tokens": 128,
+  "gpu": {
+   "vram_mib": 22209,
+   "watts": 243.05,
+   "sm_mhz": 1215,
+   "temp_c": 74
+  }
+ },
+ "usage": {
+  "completion_tokens": 128,
+  "prompt_tokens": 16449,
+  "total_tokens": 16577,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 16449,
+  "prompt_ms": 18674.492,
+  "prompt_per_token_ms": 1.135296492187975,
+  "prompt_per_second": 880.8271732371622,
+  "predicted_n": 128,
+  "predicted_ms": 3470.581,
+  "predicted_per_token_ms": 27.327409448818898,
+  "predicted_per_second": 36.593296626703136,
+  "draft_n": 129,
+  "draft_n_accepted": 62
+ }
+}

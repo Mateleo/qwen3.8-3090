@@ -44,6 +44,10 @@ STOCK = HOME / "llama.cpp/build/bin/llama-server"
 AMPERE = HOME / "llamAmpere-src/repo/build-sm86/bin/llama-server"
 VOCAB_MAP = HOME / "llamAmpere-src/repo/docs/mtp-vocab/atx_65536.txt"
 DFLASH = HOME / "models/Qwen3.8-27B-DFlash2/Qwen3.8-27B-DFlash2-Q8_0.gguf"
+# Patched libggml-base.so (patches/llamampere-compute-slack.patch), picked up ahead
+# of the fork's RUNPATH. With GGML_COMPUTE_SLACK_MIB unset it behaves as upstream.
+SLACK_LIB = HOME / "llamAmpere-src/libslack"
+SLACK_ENV = {"LD_LIBRARY_PATH": str(SLACK_LIB), "GGML_COMPUTE_SLACK_MIB": "8"}
 
 PORT = int(os.environ.get("THESIS2_PORT", "2233"))
 BASE = f"http://127.0.0.1:{PORT}"
@@ -366,6 +370,41 @@ PROFILES = {
         AMPERE, ["--fit", "off"] + mtp(3) + ["--backend-sampling"], {"GGML_CUDA_DISABLE_GRAPHS": "1"},
         "fork with CUDA graphs disabled (control)",
     ),
+    # ---- third pass: shared compute buffer (patches/llamampere-compute-slack.patch) ----
+    "amp-be-gv-embed-slack": (
+        AMPERE,
+        ["--fit", "off"] + mtp(2, ["--spec-draft-vocab-map", str(VOCAB_MAP)],
+                               model="embedded") + ["--backend-sampling"],
+        {"LLAMA_MTP_GPU_VERIFY": "1", **SLACK_ENV},
+        "promoted fork profile + compute slack (MTP shares the target compute buffer)",
+    ),
+    "amp-chain-gv-embed": (
+        AMPERE,
+        ["--fit", "off"] + mtp(3, model="embedded") + ["--spec-chain", "3", "--backend-sampling"],
+        {"LLAMA_MTP_GPU_VERIFY": "1"},
+        "chained MTP3 on the embedded head, GPU verification",
+    ),
+    "amp-chain-gv-embed-slack": (
+        AMPERE,
+        ["--fit", "off"] + mtp(3, model="embedded") + ["--spec-chain", "3", "--backend-sampling"],
+        {"LLAMA_MTP_GPU_VERIFY": "1", **SLACK_ENV},
+        "chained MTP3 on the embedded head, GPU verification, compute slack",
+    ),
+    "amp-chain-gv-embed-map-slack": (
+        AMPERE,
+        ["--fit", "off"] + mtp(3, ["--spec-draft-vocab-map", str(VOCAB_MAP)], model="embedded")
+        + ["--spec-chain", "3", "--backend-sampling"],
+        {"LLAMA_MTP_GPU_VERIFY": "1", **SLACK_ENV},
+        "chained MTP3, embedded head, shortlist, GPU verification, compute slack",
+    ),
+    "amp-be-gv-embed-pmin-slack": (
+        AMPERE,
+        ["--fit", "off"] + mtp(4, ["--spec-draft-vocab-map", str(VOCAB_MAP),
+                                   "--spec-draft-p-min", "0.75"], model="embedded")
+        + ["--backend-sampling"],
+        {"LLAMA_MTP_GPU_VERIFY": "1", **SLACK_ENV},
+        "promoted + MTP depth 4 gated at p-min 0.75 (registry 4090 recipe), compute slack",
+    ),
 }
 
 
@@ -430,7 +469,8 @@ def start_server(binary, extra, env, log_path):
                  "GGML_Q8_TURBO3_MMA_MIN_Q", "GGML_Q8_TURBO3_MMA_NCOLS1_MIN",
                  "GGML_CUDA_FUSE_CHAIN", "GGML_CUDA_Q8CACHE", "LLAMA_SPEC_CHAIN",
                  "LLAMA_SPEC_DRAFT_VOCAB", "CUDA_SCALE_LAUNCH_QUEUES",
-                 "GGML_CUDA_DISABLE_GRAPHS", "LLAMA_MTP_VERBOSE"):
+                 "GGML_CUDA_DISABLE_GRAPHS", "LLAMA_MTP_VERBOSE",
+                 "GGML_COMPUTE_SLACK_MIB", "LD_LIBRARY_PATH"):
         full_env.pop(knob, None)
     full_env.update(env)
     logfile = open(log_path, "w")

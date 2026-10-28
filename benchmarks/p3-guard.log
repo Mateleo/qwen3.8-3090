@@ -1,0 +1,17 @@
+[guard 11:51:52] pid 2386: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[guard 11:52:47] KILL: VRAM 23011 MiB > 23000 MiB
+[guard 11:52:47] exit rc=-9, peak VRAM 23011 MiB, min MemAvailable 7584 MiB
+[guard 11:53:02] pid 2511: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[guard 11:54:29] exit rc=0, peak VRAM 22315 MiB, min MemAvailable 7375 MiB
+[guard 11:54:53] pid 2596: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[guard 11:58:49] exit rc=0, peak VRAM 22854 MiB, min MemAvailable 7003 MiB
+[guard 11:59:18] pid 2756: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[guard 12:05:11] exit rc=0, peak VRAM 22579 MiB, min MemAvailable 6970 MiB
+[guard 12:05:22] pid 2905: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[guard 12:08:21] exit rc=0, peak VRAM 22269 MiB, min MemAvailable 6989 MiB
+[guard 12:08:43] pid 3036: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[guard 12:11:41] exit rc=0, peak VRAM 22247 MiB, min MemAvailable 7044 MiB
+[guard 12:12:04] pid 3116: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[guard 12:14:21] exit rc=0, peak VRAM 22105 MiB, min MemAvailable 7180 MiB
+[guard 12:15:14] pid 3325: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[guard 12:16:36] exit rc=0, peak VRAM 22141 MiB, min MemAvailable 7529 MiB

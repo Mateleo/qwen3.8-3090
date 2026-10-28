@@ -50,6 +50,7 @@ ROOT="${QWEN_ROOT:-$SCRIPT_DIR}"
 # runtime. Evidence and exact numbers: thesis.md, benchmarks/thesis2-*.
 STOCK_SERVER="${QWEN_STOCK_SERVER:-$HOME/llama.cpp/build/bin/llama-server}"
 AMPERE_SERVER="${QWEN_AMPERE_SERVER:-$HOME/llamAmpere-src/repo/build-sm86/bin/llama-server}"
+SLACK_LIB="${QWEN_SLACK_LIB:-$HOME/llamAmpere-src/libslack}"
 AMPERE_AVAILABLE=0
 [[ -x "$AMPERE_SERVER" ]] && AMPERE_AVAILABLE=1
 
@@ -422,6 +423,7 @@ fi
   printf 'draft=%s\n' "$DRAFT_DESC"
   printf 'vocab_map=%s\n' "$([[ -r "$VOCAB_MAP" ]] && printf '%s' "$VOCAB_MAP" || printf 'none')"
   if (( SERVER_FORK )); then
+    printf 'compute_slack=%s\n' "$([[ "${QWEN_COMPUTE_SLACK:-1}" != "0" && -r "$SLACK_LIB/libggml-base.so.0" ]] && printf '%s' "$SLACK_LIB" || printf 'off')"
     printf 'spec_draft_n_max=%s\n' "$SPEC_DRAFT_N_MAX"
   else
     printf 'spec_draft_n_max=default\n'
@@ -431,7 +433,15 @@ fi
 : >"$LOG_FILE"
 if (( SERVER_FORK )); then
   # Verify the drafter's tokens on the GPU as well (LLAMA_MTP_GPU_VERIFY=1).
-  nohup env LLAMA_MTP_GPU_VERIFY=1 "$LLAMA_SERVER" "${args[@]}" >>"$LOG_FILE" 2>&1 &
+  fork_env=(LLAMA_MTP_GPU_VERIFY=1)
+  # Shared compute buffer (patches/llamampere-compute-slack.patch): without a few
+  # MiB of slack the MTP context misses the target's 708 MiB buffer by one logits
+  # row and allocates its own, which took the card to 23,011 MiB on greedy
+  # requests. Same outputs; build it with patches/build-compute-slack.sh.
+  if [[ "${QWEN_COMPUTE_SLACK:-1}" != "0" && -r "$SLACK_LIB/libggml-base.so.0" ]]; then
+    fork_env+=(LD_LIBRARY_PATH="$SLACK_LIB" GGML_COMPUTE_SLACK_MIB=8)
+  fi
+  nohup env "${fork_env[@]}" "$LLAMA_SERVER" "${args[@]}" >>"$LOG_FILE" 2>&1 &
 else
   nohup "$LLAMA_SERVER" "${args[@]}" >>"$LOG_FILE" 2>&1 &
 fi

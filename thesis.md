@@ -82,6 +82,10 @@ has the *most* headroom (speculative sidecar dropped, about 2.1 GiB free for the
 Windows desktop). `--cache-ram 0` is kept everywhere, so no run parks state in
 host RAM, and no run used `mlock` or CPU offload.
 
+> **Correction (third pass, section 8):** these peaks were sampled between
+> requests. Watched continuously, the unpatched promoted profile reaches 23,011 MiB
+> on greedy requests. The compute-slack patch brings that back to about 22.1-22.3 GiB.
+
 Spot check through the launcher itself, two identical coding prompts sent to the
 chat endpoint at production sampling, 200 output tokens, single observation each
 (`benchmarks/api-probe.py`): `QWEN_SERVER_BUILD=stock` served 32.06 and 29.56
@@ -307,3 +311,66 @@ cmake -S . -B build-sm86 -DCMAKE_BUILD_TYPE=Release -DGGML_CUDA=ON \
       -DGGML_CUDA_FA=ON -DCMAKE_CUDA_ARCHITECTURES=86 -DGGML_NATIVE=ON
 cmake --build build-sm86 -j2 --target llama-server llama-quantize
 ```
+
+## 8. Third pass (2026-09-23): shared compute buffer, guard, registry levers
+
+Inspiration: the 0xsero/local-ai-registry recipes for Qwen3.6/3.8-27B on single
+24 GB cards. Every run below went through `benchmarks/guard.py`: a systemd user
+scope capped at 5 GiB RAM + 512 MiB swap, and a 250 ms VRAM watchdog that
+SIGKILLs the scope above 23,000 MiB total card usage.
+
+**Finding: the promoted `fast` profile reaches 23,011 MiB.** On the greedy
+screen, the guard killed the unpatched profile during the copy fixture
+(`thesis2-p3-slack1`, marked invalid). Cause, from the server log: the fork
+shares the target's compute buffer with the MTP context only when it is large
+enough, and at 131,072 context the MTP graph needs 708.96 MiB against 708.02 MiB,
+exactly one fp32 logits row (248,320 x 4 B). So on the GPU-verification path it
+allocates a private 709 MiB VRAM buffer (plus 148 MiB pinned host) on every
+request. The section 1 peak (22,438 MiB) was sampled between requests and missed it.
+
+Fix: `patches/llamampere-compute-slack.patch` (opt-in `GGML_COMPUTE_SLACK_MIB`,
+default unchanged) adds a few MiB to each compute buffer so the MTP context fits.
+`patches/build-compute-slack.sh` relinks only `libggml-base.so` into
+`~/llamAmpere-src/libslack` in seconds. The fork's tree and build are untouched,
+and `start.sh` loads the library through `LD_LIBRARY_PATH` (opt out with
+`QWEN_COMPUTE_SLACK=0`).
+
+| Measurement (promoted profile) | unpatched | patched |
+|---|---:|---:|
+| greedy screen, peak VRAM (continuous) | killed at 23,011 | 22,315 / 22,141 |
+| 68K-token prompt, peak VRAM | 23,155 (2nd pass, sampled) | 22,105 |
+| greedy output, 5 fixtures | - | byte-identical to the 2nd pass |
+| greedy decode geomean, 4 fixtures | 56.34 (2nd pass) | 59.06 |
+| short-prompt prefill (greedy) | 106-122 tok/s | 180-192 tok/s |
+| production confirm, mean tok/s (ABA order) | 47.0 | 49.5, 47.7 |
+| 68K prefill | 705.5 (2nd pass) | 734.6 (single) |
+
+Production-sampling decode is unchanged within noise: the private-buffer path
+only triggers with GPU greedy verification. The win is safety, about 0.7-1 GiB of
+headroom on greedy/tool traffic and long prompts, plus faster short-prompt
+latency on that path.
+
+Registry levers screened on the patched library (`thesis2-p3-screen3`, greedy):
+
+| Profile | geomean | vs promoted | peak VRAM | output |
+|---|---:|---:|---:|---|
+| chained MTP3, embedded head, GPU verification | 65.31 | +10.6% | 22,432 | identical |
+| same + 65K shortlist | 64.15 | +8.6% | 22,432 | identical |
+| MTP depth 4 + `--spec-draft-p-min 0.75` (4090 recipe) | 55.03 | -6.8% | 22,872 | differs 3/5 |
+
+Chained MTP3 no longer needs the VRAM that crashed the host (22.4 vs 23.2 GiB),
+but at production sampling it ties (`thesis2-p3-confirm1`: 49.7 vs 49.5 tok/s,
+acceptance 50.8% vs 58.4%). It was not promoted. Consider it for greedy/agent
+traffic only. The p-min gate loses here.
+
+Not attempted, with reasons: vLLM W4A16 + MTP (registry: 113 tok/s on a 3090, but
+thinking off, 65K context, bf16 KV, a different checkpoint, and a ~15 GB download
+plus a Docker/PyTorch stack on a 10 GiB-RAM WSL host); buun-llama-cpp DFlash
+(150 tok/s is greedy, reasoning off, 4K context, on Qwen3.6 with its own drafter;
+DFlash2 already lost here, section 4c); larger `-ub` for prefill (+2% measured at
+UB1024 in the 2nd pass; the compute buffer doubles).
+
+Windows-side advice not applied from WSL: set *NVIDIA Control Panel > Manage 3D
+settings > CUDA - Sysmem Fallback Policy* to **Prefer No Sysmem Fallback**. Then
+an over-allocation fails with an out-of-memory error instead of silently
+spilling into shared system RAM.

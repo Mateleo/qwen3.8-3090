@@ -1,0 +1,28 @@
+--- a/ggml/src/ggml-alloc.c
++++ b/ggml/src/ggml-alloc.c
+@@ -432,8 +432,25 @@
+     }
+     buf->refs = 1;
+ 
++    // Optional headroom for compute buffers (GGML_COMPUTE_SLACK_MIB, default 0 = unchanged).
++    // An MTP draft context adopts the target's compute buffer only when it is large enough
++    // (ggml_gallocr_set_donor). On Qwen3.8-27B at 131072 context the drafter needs one fp32
++    // logits row (~0.95 MiB) more than the target's 708 MiB buffer, so it allocates a private
++    // 709 MiB VRAM buffer (+148 MiB pinned host) instead. A few MiB of slack makes it fit.
++    static long slack_bytes = -1;
++    if (slack_bytes < 0) {
++        const char * env = getenv("GGML_COMPUTE_SLACK_MIB");
++        slack_bytes = env ? atol(env) * 1024L * 1024L : 0;
++        if (slack_bytes < 0) {
++            slack_bytes = 0;
++        }
++    }
++
+     for (int n = 0; n < talloc->n_chunks; n++) {
+         size_t chunk_size = talloc->chunks[n]->max_size;
++        if (usage == GGML_BACKEND_BUFFER_USAGE_COMPUTE && slack_bytes > 0 && chunk_size > 0) {
++            chunk_size += (size_t) slack_bytes;
++        }
+         buf->chunks[n] = ggml_backend_buft_alloc_buffer(buft, chunk_size);
+         if (buf->chunks[n] == NULL) {
+             ggml_vbuffer_free(buf);

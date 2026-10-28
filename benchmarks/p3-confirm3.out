@@ -1,0 +1,19 @@
+[guard 12:08:43] pid 3036: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[12:08:43] confirm amp-be-gv-embed-slack: promoted fork profile + compute slack (MTP shares the target compute buffer)
+  novel-code   seed 3   decode  53.59 tok/s prefill   183.91 draft 147/214 wall 5.9s
+  prose        seed 3   decode  49.05 tok/s prefill   198.18 draft 135/240 wall 5.8s
+  patch        seed 3   decode  50.22 tok/s prefill   456.07 draft 138/233 wall 6.0s
+  copy         seed 3   decode  45.13 tok/s prefill   453.90 draft 123/263 wall 5.1s
+  prefill8k    seed 3   decode  41.98 tok/s prefill   911.63 draft 68/117 wall 21.1s
+  novel-code   seed 7   decode  51.55 tok/s prefill   264.33 draft 147/213 wall 5.7s
+  prose        seed 7   decode  44.00 tok/s prefill   200.58 draft 131/245 wall 5.5s
+  patch        seed 7   decode  49.08 tok/s prefill   427.94 draft 144/222 wall 6.1s
+  copy         seed 7   decode  47.81 tok/s prefill   444.45 draft 140/228 wall 6.1s
+  prefill8k    seed 7   decode  36.66 tok/s prefill   879.18 draft 62/129 wall 21.2s
+  novel-code   seed 11  decode  39.66 tok/s prefill   264.41 draft 118/272 wall 7.1s
+  prose        seed 11  decode  41.31 tok/s prefill   201.24 draft 127/253 wall 6.8s
+  patch        seed 11  decode  51.58 tok/s prefill   461.76 draft 150/207 wall 5.8s
+  copy         seed 11  decode  49.30 tok/s prefill   440.51 draft 147/215 wall 6.0s
+  prefill8k    seed 11  decode  40.04 tok/s prefill   883.32 draft 67/119 wall 20.4s
+done, results in /home/mateleo/qwen3.8-server/benchmarks/thesis2-p3-confirm3/rows.jsonl
+[guard 12:11:41] exit rc=0, peak VRAM 22247 MiB, min MemAvailable 7044 MiB

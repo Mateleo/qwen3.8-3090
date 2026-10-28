@@ -1,0 +1,46 @@
+{
+ "row": {
+  "tag": "p3-confirm1",
+  "profile": "amp-chain-gv-embed-slack",
+  "note": "chained MTP3 on the embedded head, GPU verification, compute slack",
+  "fixture": "copy",
+  "seed": 7,
+  "temp": 1.0,
+  "load_s": 33.61,
+  "wall_s": 5.286,
+  "prompt_n": 359,
+  "prompt_per_second": 308.4396476399212,
+  "predicted_n": 256,
+  "predicted_per_second": 49.092529406906415,
+  "draft_n": 312,
+  "draft_n_accepted": 150,
+  "completion_tokens": 256,
+  "gpu": {
+   "vram_mib": 22501,
+   "watts": 243.0,
+   "sm_mhz": 1635,
+   "temp_c": 70
+  }
+ },
+ "usage": {
+  "completion_tokens": 256,
+  "prompt_tokens": 359,
+  "total_tokens": 615,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 359,
+  "prompt_ms": 1163.923,
+  "prompt_per_token_ms": 3.2421253481894152,
+  "prompt_per_second": 308.4396476399212,
+  "predicted_n": 256,
+  "predicted_ms": 5194.273,
+  "predicted_per_token_ms": 20.369698039215688,
+  "predicted_per_second": 49.092529406906415,
+  "draft_n": 312,
+  "draft_n_accepted": 150
+ }
+}

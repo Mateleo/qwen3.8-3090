@@ -1,0 +1,27 @@
+[guard 11:54:53] pid 2596: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[11:54:53] start amp-chain-gv-embed-slack (chained MTP3 on the embedded head, GPU verification, compute slack)
+[11:55:26]   ready in 33.0s, {'vram_mib': 22324, 'watts': 69.56, 'sm_mhz': 510, 'temp_c': 45}
+[11:55:32]   novel-code   decode 59.80 tok/s | prefill 186.59 tok/s | draft 166/265 | 5.2s
+[11:55:36]   prose        decode 60.12 tok/s | prefill 200.34 tok/s | draft 166/264 | 4.7s
+[11:55:41]   patch        decode 64.73 tok/s | prefill 567.05 tok/s | draft 171/250 | 4.7s
+[11:55:45]   copy         decode 78.20 tok/s | prefill 539.16 tok/s | draft 187/203 | 3.9s
+[11:56:01]   prefill8k    decode 30.05 tok/s | prefill 943.53 tok/s | draft 3/9 | 16.2s
+[11:56:11] wrote 5 rows for amp-chain-gv-embed-slack
+[11:56:11] start amp-chain-gv-embed-map-slack (chained MTP3, embedded head, shortlist, GPU verification, compute slack)
+[11:56:42]   ready in 31.1s, {'vram_mib': 22324, 'watts': 53.3, 'sm_mhz': 885, 'temp_c': 49}
+[11:56:48]   novel-code   decode 54.06 tok/s | prefill 187.27 tok/s | draft 166/265 | 5.9s
+[11:56:53]   prose        decode 59.30 tok/s | prefill 158.11 tok/s | draft 166/264 | 4.8s
+[11:56:58]   patch        decode 62.05 tok/s | prefill 582.81 tok/s | draft 171/250 | 4.9s
+[11:57:01]   copy         decode 85.13 tok/s | prefill 598.27 tok/s | draft 187/203 | 3.5s
+[11:57:18]   prefill8k    decode 30.80 tok/s | prefill 990.24 tok/s | draft 3/9 | 16.9s
+[11:57:28] wrote 5 rows for amp-chain-gv-embed-map-slack
+[11:57:28] start amp-be-gv-embed-pmin-slack (promoted + MTP depth 4 gated at p-min 0.75 (registry 4090 recipe), compute slack)
+[11:58:00]   ready in 31.4s, {'vram_mib': 22474, 'watts': 42.89, 'sm_mhz': 570, 'temp_c': 49}
+[11:58:06]   novel-code   decode 51.97 tok/s | prefill 219.10 tok/s | draft 167/195 | 5.9s
+[11:58:12]   prose        decode 44.65 tok/s | prefill 199.78 tok/s | draft 150/182 | 6.2s
+[11:58:18]   patch        decode 52.62 tok/s | prefill 586.12 tok/s | draft 170/191 | 5.6s
+[11:58:22]   copy         decode 75.12 tok/s | prefill 587.15 tok/s | draft 198/205 | 4.0s
+[11:58:38]   prefill8k    decode 33.98 tok/s | prefill 956.81 tok/s | draft 4/4 | 16.7s
+[11:58:48] wrote 5 rows for amp-be-gv-embed-pmin-slack
+[11:58:48] done, results in /home/mateleo/qwen3.8-server/benchmarks/thesis2-p3-screen3/rows.jsonl
+[guard 11:58:49] exit rc=0, peak VRAM 22854 MiB, min MemAvailable 7003 MiB

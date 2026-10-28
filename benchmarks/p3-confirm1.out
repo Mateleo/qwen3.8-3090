@@ -1,0 +1,35 @@
+[guard 11:59:18] pid 2756: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
+[11:59:18] confirm amp-be-gv-embed-slack: promoted fork profile + compute slack (MTP shares the target compute buffer)
+  novel-code   seed 3   decode  51.54 tok/s prefill   172.26 draft 147/214 wall 6.5s
+  prose        seed 3   decode  48.94 tok/s prefill   195.80 draft 135/240 wall 5.9s
+  patch        seed 3   decode  50.87 tok/s prefill   461.03 draft 138/233 wall 6.0s
+  copy         seed 3   decode  46.04 tok/s prefill   449.77 draft 123/263 wall 6.4s
+  prefill8k    seed 3   decode  44.76 tok/s prefill   965.36 draft 68/117 wall 19.9s
+  novel-code   seed 7   decode  54.16 tok/s prefill   254.24 draft 147/213 wall 5.4s
+  prose        seed 7   decode  47.90 tok/s prefill   188.03 draft 131/245 wall 5.2s
+  patch        seed 7   decode  53.25 tok/s prefill   462.44 draft 144/222 wall 5.6s
+  copy         seed 7   decode  50.56 tok/s prefill   431.75 draft 140/228 wall 5.9s
+  prefill8k    seed 7   decode  36.21 tok/s prefill   913.21 draft 62/129 wall 21.0s
+  novel-code   seed 11  decode  40.29 tok/s prefill   258.58 draft 118/272 wall 7.1s
+  prose        seed 11  decode  43.06 tok/s prefill   201.36 draft 127/253 wall 6.5s
+  patch        seed 11  decode  54.39 tok/s prefill   449.49 draft 150/207 wall 5.6s
+  copy         seed 11  decode  52.79 tok/s prefill   453.04 draft 147/215 wall 5.6s
+  prefill8k    seed 11  decode  40.80 tok/s prefill   922.96 draft 67/119 wall 20.1s
+[12:02:14] confirm amp-chain-gv-embed-slack: chained MTP3 on the embedded head, GPU verification, compute slack
+  novel-code   seed 3   decode  55.43 tok/s prefill   171.64 draft 159/285 wall 5.1s
+  prose        seed 3   decode  54.80 tok/s prefill   204.35 draft 153/303 wall 5.3s
+  patch        seed 3   decode  51.78 tok/s prefill   438.97 draft 162/277 wall 6.0s
+  copy         seed 3   decode  45.44 tok/s prefill   432.92 draft 137/353 wall 6.5s
+  prefill8k    seed 3   decode  43.72 tok/s prefill   916.33 draft 75/151 wall 20.0s
+  novel-code   seed 7   decode  51.05 tok/s prefill   256.60 draft 160/279 wall 5.7s
+  prose        seed 7   decode  44.64 tok/s prefill   196.33 draft 146/324 wall 6.3s
+  patch        seed 7   decode  52.84 tok/s prefill   420.57 draft 159/283 wall 5.8s
+  copy         seed 7   decode  49.09 tok/s prefill   308.44 draft 150/312 wall 5.3s
+  prefill8k    seed 7   decode  42.77 tok/s prefill   878.52 draft 76/153 wall 21.7s
+  novel-code   seed 11  decode  39.83 tok/s prefill   272.66 draft 128/379 wall 7.1s
+  prose        seed 11  decode  42.69 tok/s prefill   210.12 draft 137/348 wall 5.5s
+  patch        seed 11  decode  57.31 tok/s prefill   473.29 draft 168/258 wall 5.3s
+  copy         seed 11  decode  51.14 tok/s prefill   456.23 draft 164/272 wall 5.8s
+  prefill8k    seed 11  decode  44.27 tok/s prefill   856.91 draft 78/145 wall 21.0s
+done, results in /home/mateleo/qwen3.8-server/benchmarks/thesis2-p3-confirm1/rows.jsonl
+[guard 12:05:11] exit rc=0, peak VRAM 22579 MiB, min MemAvailable 6970 MiB
