@@ -35,4 +35,5 @@ fi
 rm -f \
   "$STATE_DIR/share-api-key" "$STATE_DIR/tunnel-url" "$STATE_DIR/tunnel.pid" "$STATE_DIR/tunnel.log" \
   "$STATE_DIR/host" "$STATE_DIR/port" "$STATE_DIR/key-file" \
-  "$STATE_DIR/model-alias" "$STATE_DIR/model-label" "$STATE_DIR/model-choice"
+  "$STATE_DIR/model-alias" "$STATE_DIR/model-label" \
+  "$STATE_DIR/profile-choice" "$STATE_DIR/server-profile"

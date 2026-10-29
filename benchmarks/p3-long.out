@@ -1,8 +1,0 @@
-[guard 12:12:04] pid 3116: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
-[12:12:04] start amp-be-gv-embed-slack (promoted fork profile + compute slack (MTP shares the target compute buffer))
-[12:12:36]   ready in 32.2s, {'vram_mib': 22049, 'watts': 71.8, 'sm_mhz': 930, 'temp_c': 50}
-[12:12:42]   copy         decode 63.60 tok/s | prefill 321.22 tok/s | draft 168/173 | 5.1s
-[12:14:12]   prefill32k   decode 33.11 tok/s | prefill 734.59 tok/s | draft 4/6 | 90.2s
-[12:14:21] wrote 2 rows for amp-be-gv-embed-slack
-[12:14:21] done, results in /home/mateleo/qwen3.8-server/benchmarks/thesis2-p3-long/rows.jsonl
-[guard 12:14:21] exit rc=0, peak VRAM 22105 MiB, min MemAvailable 7180 MiB

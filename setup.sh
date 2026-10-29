@@ -16,8 +16,9 @@ while (($#)); do
 Usage: setup.sh [--model current|aggressive] [--yes]
 
 Installs a local Hugging Face CLI when needed, downloads the selected model
-with progress reporting, builds llama.cpp with detected CUDA build settings,
-and creates a private API key. Existing files are left untouched.
+with progress reporting, builds llamAmpere (a llama.cpp fork tuned for the
+RTX 3090) with CUDA, and creates a private API key. Existing files are left
+untouched.
 EOF
       exit 0
       ;;
@@ -26,9 +27,12 @@ EOF
   shift
 done
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="${QWEN_TOOLS_DIR:-$HOME/.local/share/qwen3.8}"
-LLAMA_DIR="${LLAMA_CPP_DIR:-$HOME/llama.cpp}"
-LLAMA_SERVER="${LLAMA_SERVER:-$LLAMA_DIR/build/bin/llama-server}"
+LLAMA_DIR="${LLAMA_CPP_DIR:-$HOME/llamAmpere-src/v0.6}"
+LLAMA_SERVER="${LLAMA_SERVER:-$LLAMA_DIR/build-sm86/bin/llama-server}"
+LLAMA_REPO="https://github.com/JakeATX/llamAmpere.git"
+LLAMA_TAG="v0.6"
 KEY_FILE="${QWEN_API_KEY_FILE:-$HOME/.config/qwen3.8/api-key}"
 
 confirm() {
@@ -60,7 +64,6 @@ case "$MODEL_CHOICE" in
     FILES=(
       "Qwen3.8-27B-UD-Q4_K_XL.gguf"
       "mmproj-F16.gguf"
-      "MTP/mtp-Qwen3.8-27B-Q4_0.gguf"
     )
     ;;
   aggressive)
@@ -110,19 +113,25 @@ fi
 if [[ ! -x "$LLAMA_SERVER" ]]; then
   echo
   echo "llama-server was not found at $LLAMA_SERVER."
-  command -v git >/dev/null || { echo "git is required to build llama.cpp." >&2; exit 1; }
-  command -v cmake >/dev/null || { echo "cmake is required to build llama.cpp." >&2; exit 1; }
+  command -v git >/dev/null || { echo "git is required to build llamAmpere." >&2; exit 1; }
+  command -v cmake >/dev/null || { echo "cmake is required to build llamAmpere." >&2; exit 1; }
   command -v nvcc >/dev/null || { echo "The NVIDIA CUDA toolkit (nvcc) is required." >&2; exit 1; }
-  confirm "Clone and build llama.cpp with CUDA now?" || { echo "Setup cancelled."; exit 1; }
+  echo "The build takes 1-3 hours; one kernel file alone needs about 8.5 GB of RAM."
+  confirm "Clone and build llamAmpere $LLAMA_TAG with CUDA now?" || { echo "Setup cancelled."; exit 1; }
 
-  if [[ ! -d "$LLAMA_DIR/.git" ]]; then
-    git clone --depth 1 https://github.com/ggml-org/llama.cpp.git "$LLAMA_DIR"
+  if [[ ! -d "$LLAMA_DIR/.git" && ! -f "$LLAMA_DIR/.git" ]]; then
+    git clone --depth 1 -b "$LLAMA_TAG" "$LLAMA_REPO" "$LLAMA_DIR"
   fi
-  jobs="${QWEN_BUILD_JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 4)}"
+  # CUDA 12.0's ptxas rejects two opt-in kernel instances; harmless on newer toolkits.
+  patch_file="$SCRIPT_DIR/patches/llamampere-v0.6-cuda12.0.patch"
+  if git -C "$LLAMA_DIR" apply --check "$patch_file" 2>/dev/null; then
+    git -C "$LLAMA_DIR" apply "$patch_file"
+  fi
+  jobs="${QWEN_BUILD_JOBS:-2}"
   echo "Building llama-server with CUDA using $jobs parallel jobs ..."
-  cmake -S "$LLAMA_DIR" -B "$LLAMA_DIR/build" \
-    -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release
-  cmake --build "$LLAMA_DIR/build" --config Release --target llama-server -j "$jobs"
+  cmake -S "$LLAMA_DIR" -B "$LLAMA_DIR/build-sm86" -DCMAKE_BUILD_TYPE=Release \
+    -DGGML_CUDA=ON -DGGML_CUDA_FA=ON -DCMAKE_CUDA_ARCHITECTURES=86 -DGGML_NATIVE=ON
+  cmake --build "$LLAMA_DIR/build-sm86" --target llama-server -j "$jobs"
 fi
 
 if [[ ! -s "$KEY_FILE" ]]; then

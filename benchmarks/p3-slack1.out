@@ -1,8 +1,0 @@
-[guard 11:51:52] pid 2386: vram<=23000 MiB, ram<=5G (+swap 512M), MemAvailable>=1200 MiB
-[11:51:52] start amp-be-gv-embed (fork, embedded MTP head, shortlist, GPU sampling and GPU verification)
-[11:52:29]   ready in 37.1s, {'vram_mib': 22228, 'watts': 77.94, 'sm_mhz': 900, 'temp_c': 53}
-[11:52:35]   novel-code   decode 57.17 tok/s | prefill 121.70 tok/s | draft 154/201 | 6.0s
-[11:52:41]   prose        decode 53.55 tok/s | prefill 105.94 tok/s | draft 150/208 | 5.5s
-[11:52:46]   patch        decode 55.35 tok/s | prefill 378.52 tok/s | draft 153/201 | 4.7s
-[guard 11:52:47] KILL: VRAM 23011 MiB > 23000 MiB
-[guard 11:52:47] exit rc=-9, peak VRAM 23011 MiB, min MemAvailable 7584 MiB

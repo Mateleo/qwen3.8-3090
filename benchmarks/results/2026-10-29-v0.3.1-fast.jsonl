@@ -1,0 +1,4 @@
+{"tag": "old", "step": "cold", "wall_s": 87.1, "prompt_n": 49421, "prefill_tps": 786.9, "prefill_s": 62.8, "gen_n": 1200, "decode_tps": 41.85, "draft_n": 918, "draft_acc": 740}
+{"tag": "old", "step": "turn", "wall_s": 28.4, "prompt_n": 35, "prefill_tps": 22.9, "prefill_s": 1.5, "gen_n": 1200, "decode_tps": 41.13, "draft_n": 924, "draft_acc": 736}
+{"tag": "old", "step": "side", "wall_s": 9.4, "prompt_n": 3587, "prefill_tps": 784.2, "prefill_s": 4.6, "gen_n": 200, "decode_tps": 41.16, "draft_n": 202, "draft_acc": 98}
+{"tag": "old", "step": "back", "wall_s": 94.6, "prompt_n": 49474, "prefill_tps": 761.9, "prefill_s": 64.9, "gen_n": 1200, "decode_tps": 32.49, "draft_n": 1156, "draft_acc": 621}
