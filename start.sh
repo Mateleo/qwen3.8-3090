@@ -17,8 +17,8 @@ while (($#)); do
       cat <<'EOF'
 Usage: start.sh [--detach] [--model current|aggressive] [--share]
 
-Starts Qwen and opens the live dashboard. Without --model, the model used last
-is served (the first run asks). --share creates a public Cloudflare Quick Tunnel
+Starts Qwen and opens the live dashboard. Without --model, a menu asks which
+model to serve, with the one used last preselected. --share creates a public Cloudflare Quick Tunnel
 with a fresh temporary API password (cloudflared must be installed).
 
 Models:
@@ -83,17 +83,31 @@ else
     "$STATE_DIR/share-api-key"
 fi
 
+# The menu preselects the model used last, so pressing Enter repeats it.
 choose_model() {
   [[ -n "$MODEL_CHOICE" ]] && return
+  local default=current
   if [[ -s "$STATE_DIR/model-choice" ]]; then
-    MODEL_CHOICE="$(<"$STATE_DIR/model-choice")"
-    return
+    default="$(<"$STATE_DIR/model-choice")"
   fi
-  MODEL_CHOICE=current
-  if [[ -t 0 && -t 1 ]]; then
-    printf 'Choose a model:\n  1) Qwen3.8 27B · Unsloth UD-Q4_K_XL\n  2) HauhauCS Aggressive · Q4_K_P\n> '
+  if [[ -t 0 && -t 1 ]] && command -v whiptail >/dev/null; then
+    MODEL_CHOICE=$(whiptail --title "Qwen 3.8 - what to serve" --default-item "$default" \
+      --menu "Pick a model. Last used: $default" 12 72 2 \
+      current    "Qwen3.8 27B - Unsloth UD-Q4_K_XL" \
+      aggressive "Qwen3.8 27B - Aggressive Q4_K_P (uncensored)" \
+      3>&1 1>&2 2>&3) || exit 0
+  elif [[ -t 0 && -t 1 ]]; then
+    printf 'Pick a model:\n  1) current     Qwen3.8 27B - Unsloth UD-Q4_K_XL\n'
+    printf '  2) aggressive  Qwen3.8 27B - Aggressive Q4_K_P (uncensored)\nChoice [%s]: ' "$default"
     read -r answer
-    [[ "$answer" == 2 ]] && MODEL_CHOICE=aggressive
+    case "$answer" in
+      "")                MODEL_CHOICE="$default" ;;
+      1|current)         MODEL_CHOICE=current ;;
+      2|aggressive)      MODEL_CHOICE=aggressive ;;
+      *) echo "Invalid choice '$answer'." >&2; exit 2 ;;
+    esac
+  else
+    MODEL_CHOICE="$default"
   fi
 }
 choose_model

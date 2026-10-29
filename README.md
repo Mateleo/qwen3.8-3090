@@ -49,8 +49,8 @@ Existing model files, builds, and keys are preserved. For unattended setup, add
 ## Commands
 
 ```bash
-./start.sh                        # serve the model used last, then dashboard
-./start.sh --model aggressive     # switch model (remembered for next time)
+./start.sh                        # model menu (last used preselected), then dashboard
+./start.sh --model aggressive     # skip the menu
 ./start.sh --detach               # start without dashboard
 ./monitor.py                      # attach dashboard later
 ./status.sh
